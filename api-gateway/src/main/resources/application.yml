@@ -1,0 +1,56 @@
+server:
+  port: 8888
+  host_auth_service: ${HOST_AUTH_SERVICE:localhost}
+  host_delivery_service: ${HOST_DELIVERY_SERVICE:localhost}
+  host_notification_service: ${HOST_NOTIFICATION_SERVICE:localhost}
+  host_order_service: ${HOST_ORDER_SERVICE:localhost}
+  host_tracking_service: ${HOST_TRACKING_SERVICE:localhost}
+  port_auth_service: ${PORT_AUTH_SERVICE:8080}
+  port_delivery_service: ${PORT_DELIVERY_SERVICE:8081}
+  port_notification_service: ${PORT_NOTIFICATION_SERVICE:8082}
+  port_order_service: ${PORT_ORDER_SERVICE:8083}
+  port_tracking_service: ${PORT_TRACKING_SERVICE:8084}
+
+app:
+  api-prefix: /api/v1
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://${server.host_auth_service}:${server.port_auth_service}
+          predicates:
+            - Path=${app.api-prefix}/auth/**
+          filters:
+            - StripPrefix=2
+
+        - id: delivery-service
+          uri: http://${server.host_delivery_service}:${server.port_delivery_service}
+          predicates:
+            - Path=${app.api-prefix}/delivery/**
+          filters:
+            - StripPrefix=2
+
+        - id: notification-service
+          uri: http://${server.host_notification_service}:${server.port_notification_service}
+          predicates:
+            - Path=${app.api-prefix}/notification/**
+          filters:
+            - StripPrefix=2
+
+        - id: order-service
+          uri: http://${server.host_order_service}:${server.port_order_service}
+          predicates:
+            - Path=${app.api-prefix}/order/**
+          filters:
+            - StripPrefix=2
+
+        - id: tracking-service
+          uri: http://${server.host_tracking_service}:${server.port_tracking_service}
+          predicates:
+            - Path=${app.api-prefix}/tracking/**
+          filters:
+            - StripPrefix=2
