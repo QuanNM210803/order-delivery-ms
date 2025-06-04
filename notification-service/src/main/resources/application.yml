@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: notification-service
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_HOST:localhost}:9094
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: notification-service
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: ${MAIL_USERNAME:784652002@smtp-brevo.com}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    sender: nnmhqn2003@gmail.com
+
+server:
+  port: 8082
+  servlet:
+    context-path: /notification
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+

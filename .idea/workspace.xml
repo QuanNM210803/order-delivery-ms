@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e793ef6b-6701-468c-8e27-0e03802d021b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="e793ef6b-6701-468c-8e27-0e03802d021b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,8 +14,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Dockerfile" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -25,6 +23,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;QuanNM210803&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/QuanNM210803/order-delivery-ms.git&quot;,
+    &quot;accountId&quot;: &quot;d3000695-b898-421e-9746-fdbd3b0d2914&quot;
+  }
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -46,6 +56,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Test.executor": "Run",
+    "Notification.DisplayName-DoNotAsk-Database detector": "Database detector",
+    "Notification.DoNotAsk-Database detector": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -54,11 +67,13 @@
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.ApiGatewayApplication.executor": "Debug",
     "Spring Boot.AuthServiceApplication.executor": "Debug",
+    "Spring Boot.NotificationServiceApplication.executor": "Debug",
+    "Spring Boot.OrderServiceApplication.executor": "Debug",
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Project/order-delivery-ms/tracking-service/src/main/java/com/odms/tracking",
+    "last_opened_file_path": "D:/Project/order-delivery-ms/auth-service/src/main/java/com/odms/auth/dto",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -74,14 +89,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Project\order-delivery-ms\auth-service\src\main\java\com\odms\auth\dto" />
+      <recent name="D:\Project\order-delivery-ms\notification-service\src\main\java\com\odms\notification" />
       <recent name="D:\Project\order-delivery-ms\tracking-service\src\main\java\com\odms\tracking" />
       <recent name="D:\Project\order-delivery-ms\delivery-service\src\main\java\com\odms\delivery" />
       <recent name="D:\Project\order-delivery-ms\order-service\src\main\java\com\odms\order" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.odms.order.dto.response" />
-      <recent name="com.odms.auth.dto.response" />
-      <recent name="com.odms.auth.dto.request" />
+      <recent name="com.odms.tracking.config" />
+      <recent name="com.odms.order.config" />
+      <recent name="com.odms.delivery.config" />
+      <recent name="com.odms.auth.dto" />
+      <recent name="com.odms.order.utils" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -94,7 +113,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunManager" selected="Spring Boot.NotificationServiceApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.odms.gateway.ApiGatewayApplication" />
@@ -118,7 +137,7 @@
     </configuration>
     <configuration name="NotificationServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="notification-service" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.odms.NotificationServiceApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.odms.notification.NotificationServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -163,12 +182,36 @@
       <workItem from="1748442154501" duration="17136000" />
       <workItem from="1748459786603" duration="679000" />
       <workItem from="1748527061605" duration="8447000" />
-      <workItem from="1748577656117" duration="301000" />
+      <workItem from="1748577656117" duration="628000" />
+      <workItem from="1748840706780" duration="3904000" />
+      <workItem from="1748879320529" duration="7495000" />
+      <workItem from="1748922749598" duration="4460000" />
+      <workItem from="1748930634367" duration="13886000" />
+      <workItem from="1748955567318" duration="7697000" />
+      <workItem from="1749009819171" duration="32810000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="org.json.JSONObject" memberName="map" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

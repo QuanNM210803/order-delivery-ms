@@ -28,6 +28,8 @@ public class WebSecurityConfig {
             "/auth/verify-token",
             "/auth/login",
             "/auth/register/customer",
+            "/auth/verify-email/**",
+            "/delivery-staff/internal/update/status-finding-order",
     };
 
     @Bean

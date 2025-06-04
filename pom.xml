@@ -34,6 +34,7 @@
         <mysql.version>8.0.33</mysql.version>
         <jwt.version>0.11.5</jwt.version>
         <postgresql.version>42.7.3</postgresql.version>
+        <org.json>20231013</org.json>
     </properties>
 
     <dependencyManagement>

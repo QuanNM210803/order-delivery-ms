@@ -25,6 +25,13 @@ public class JwtTokenUtils {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
+    @Value("${jwt.verify-email.expiration}")
+    private int EXPIRATION_VERIFY_EMAIL;
+
+    @Value("${jwt.verify-email.secretKey}")
+    private String SECRET_KEY_VERIFY_EMAIL;
+
+    // functions to generate and verify JWT tokens
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         Collection<String> roles = user.getRoles().stream()
@@ -73,5 +80,45 @@ public class JwtTokenUtils {
     public Collection<String> extractAuthorities(String token) {
         return (Collection<String>) extractAllClaims(token).get("roles");
     }
+
+
+    // functions to generate and verify JWT tokens for email verification
+    public String generateTokenVerifyEmail(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("user_id", user.getUserId());
+        try {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setSubject(user.getUsername())
+                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_VERIFY_EMAIL * 1000L))
+                    .signWith(getSignInKeyVerifyEmail(), SignatureAlgorithm.HS256)
+                    .compact();
+        }
+        catch (Exception e) {
+            throw new AppException(ErrorCode.ERROR);
+        }
+    }
+
+    private Key getSignInKeyVerifyEmail() {
+        byte[] bytes = Decoders.BASE64.decode(SECRET_KEY_VERIFY_EMAIL);
+        return Keys.hmacShaKeyFor(bytes);
+    }
+
+    private Claims extractAllClaimsVerifyEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKeyVerifyEmail())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public void verifyTokenVerifyEmail(String token) {
+        extractAllClaimsVerifyEmail(token);
+    }
+
+    public Integer extractUserIdVerifyEmail(String token) {
+        return (Integer) extractAllClaimsVerifyEmail(token).get("user_id");
+    }
+
 }
 

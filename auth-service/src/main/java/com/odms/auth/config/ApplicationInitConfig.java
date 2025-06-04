@@ -1,9 +1,12 @@
 package com.odms.auth.config;
 
+import com.odms.auth.entity.DeliveryStaff;
 import com.odms.auth.entity.Role;
 import com.odms.auth.entity.User;
+import com.odms.auth.repository.DeliveryStaffRepository;
 import com.odms.auth.repository.RoleRepository;
 import com.odms.auth.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
@@ -28,7 +31,10 @@ public class ApplicationInitConfig {
             prefix = "spring",
             value = "datasource.driver-class-name",
             havingValue = "com.mysql.cj.jdbc.Driver")
-    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
+    @Transactional
+    ApplicationRunner applicationRunner(UserRepository userRepository,
+                                        RoleRepository roleRepository,
+                                        DeliveryStaffRepository deliveryStaffRepository) {
         log.info("Initializing application.....");
         return args -> {
             Role customerRole = roleRepository.findByName("CUSTOMER")
@@ -50,8 +56,9 @@ public class ApplicationInitConfig {
                         .password(passwordEncoder.encode("123456"))
                         .fullName("Customer User")
                         .phone("0123456789")
-                        .email("customer@gmail.com")
+                        .email("nnmhqn2003@gmail.com")
                         .address("Hungyen, Vietnam")
+                        .isVerified(true)
                         .roles(Collections.singleton(customerRole))
                         .build();
                 userRepository.save(customer);
@@ -63,11 +70,17 @@ public class ApplicationInitConfig {
                         .password(passwordEncoder.encode("123456"))
                         .fullName("DeliveryStaff User")
                         .phone("0123456789")
-                        .email("deliverystaff@gmail.com")
+                        .email("huykeo2022@gmail.com")
                         .address("Hanoi, Vietnam")
+                        .isVerified(true)
                         .roles(Collections.singleton(deliveryStaffRole))
                         .build();
                 userRepository.save(deliverystaff);
+                DeliveryStaff ds = DeliveryStaff.builder()
+                        .user(deliverystaff)
+                        .findingOrder(false)
+                        .build();
+                deliveryStaffRepository.save(ds);
             }
 
             if (userRepository.findByUsername("admin").isEmpty()) {
@@ -76,8 +89,9 @@ public class ApplicationInitConfig {
                         .password(passwordEncoder.encode("123456"))
                         .fullName("Admin User")
                         .phone("0123456789")
-                        .email("admin@gmail.com")
+                        .email("nnmhqn@gmail.com")
                         .address("Hanoi, Vietnam")
+                        .isVerified(true)
                         .roles(Collections.singleton(adminRole))
                         .build();
                 userRepository.save(admin);

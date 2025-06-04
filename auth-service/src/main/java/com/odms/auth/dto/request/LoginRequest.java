@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Yêu cầu tên đăng nhập")
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Yêu cầu mật khẩu")
     private String password;
 }

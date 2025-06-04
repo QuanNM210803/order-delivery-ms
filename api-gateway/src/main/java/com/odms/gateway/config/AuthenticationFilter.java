@@ -31,6 +31,8 @@ public class AuthenticationFilter implements GlobalFilter {
             "/auth/auth/verify-token",
             "/auth/auth/login",
             "/auth/auth/register/customer",
+            "/auth/auth/verify-email",
+            "/order/shipping-fee/matrix"
     };
 
     @Value("${app.api-prefix}")

@@ -56,6 +56,16 @@ services:
 #      - mongo_data:/data/db
 #      - ./scripts/init-db-mongo.js:/docker-entrypoint-initdb.d/init-db-mongo.js:ro
 
+  redis:
+    image: redis:7
+    container_name: redis-odms
+    hostname: redis
+    restart: no
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 #  gateway:
 #    build:
 #      context: ./gateway
@@ -160,3 +170,4 @@ volumes:
   mysql_data:
   postgres_data:
 #  mongo_data:
+  redis_data:

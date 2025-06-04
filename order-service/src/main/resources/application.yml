@@ -17,7 +17,7 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 server:
-  port: 8080
+  port: 8083
   servlet:
     context-path: /order
 
@@ -30,3 +30,6 @@ springdoc:
 jwt:
   expiration: 86400 # 1 day in seconds
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+
+api-key:
+  open_route_service: 5b3ce3597851110001cf62487f52190f230a41729e796039db4d4c45

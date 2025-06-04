@@ -1,21 +1,24 @@
 package com.odms.order.entity;
 
+import com.odms.order.entity.enumerate.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 public class Order extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
-    private String orderId;
+    @Column(name = "order_id", nullable = false, unique = true)
+    private Integer orderId;
 
     @Column(name = "order_code", nullable = false, unique = true)
     private String orderCode;
@@ -29,9 +32,6 @@ public class Order extends BaseEntity{
     @Column(name = "receiver_phone", nullable = false)
     private String receiverPhone;
 
-    @Column(name = "receiver_address", nullable = false)
-    private String receiverAddress;
-
     @Column(name = "pickup_address", nullable = false)
     private String pickupAddress;
 
@@ -44,9 +44,28 @@ public class Order extends BaseEntity{
     @Column(name = "size")
     private String size;
 
-    private Float weight;
+    @Column(name = "weight", nullable = false)
+    private Double weight;
 
     @Column(columnDefinition = "TEXT", length = 1000)
     private String note;
 
+    @Column(name = "price", nullable = false)
+    private Double price;
+
+    @Column(name = "order_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
+    @Column(name = "distance", nullable = false)
+    private Double distance;
+
+    @Column(name = "shipping_fee", nullable = false)
+    private Double shippingFee;
+
+    @Column(name = "cancel_reason", length = 500)
+    private String cancelReason;
+
+    @Column(name = "canceled_by")
+    private Integer canceledBy;
 }

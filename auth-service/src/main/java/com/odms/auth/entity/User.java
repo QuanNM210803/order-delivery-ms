@@ -36,11 +36,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "phone", length = 10, nullable = false)
     private String phone;
 
-    @Column(name = "email", length = 150)
+    @Column(name = "email", length = 150, nullable = false, unique = true)
     private String email;
 
     @Column(name = "address", length = 255)
     private String address;
+
+    @Column(name = "is_verified", nullable = false)
+    private Boolean isVerified = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="user_roles",
