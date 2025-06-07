@@ -1,9 +1,7 @@
 package com.odms.order.controller;
 
-import com.odms.order.dto.request.OrderRequest;
-import com.odms.order.dto.response.IDResponse;
-import com.odms.order.dto.response.OrderResponse;
-import com.odms.order.dto.response.Response;
+import com.odms.order.dto.request.*;
+import com.odms.order.dto.response.*;
 import com.odms.order.exception.AppException;
 import com.odms.order.exception.ErrorCode;
 import com.odms.order.service.IOrderService;
@@ -51,7 +49,7 @@ public class OrderController {
     }
 
     @GetMapping("/internal/order/{orderCode}")
-    public ResponseEntity<Response<OrderResponse>> checkCustomerId(@PathVariable String orderCode,
+    public ResponseEntity<Response<OrderResponse>> getOrderByOrderCode(@PathVariable String orderCode,
                                                                    HttpServletRequest request) {
         String x_internal_token = request.getHeader("X-Internal-Token");
         if (!X_INTERNAL_TOKEN.equals(x_internal_token)) {
@@ -59,6 +57,33 @@ public class OrderController {
         }
         OrderResponse response = orderService.getOrderByOrderCode(orderCode);
         return ResponseEntity.status(HttpStatus.OK).body(Response.<OrderResponse>builder()
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/filter/customer")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
+    public ResponseEntity<Response<FilterResponse<OrderFilterResponse>>> filterByCustomer(@Valid @ModelAttribute FilterOrderCustomer request) {
+        FilterResponse<OrderFilterResponse> response = orderService.filterByCustomer(request);
+        return ResponseEntity.status(HttpStatus.OK).body(Response.<FilterResponse<OrderFilterResponse>>builder()
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/filter/delivery_staff")
+    @PreAuthorize("hasAuthority('DELIVERY_STAFF')")
+    public ResponseEntity<Response<FilterResponse<OrderFilterResponse>>> filterByDelivery(@Valid @ModelAttribute FilterOrderDelivery request) {
+        FilterResponse<OrderFilterResponse> response = orderService.filterByDelivery(request);
+        return ResponseEntity.status(HttpStatus.OK).body(Response.<FilterResponse<OrderFilterResponse>>builder()
+                .data(response)
+                .build());
+    }
+
+    @GetMapping("/filter/admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response<FilterResponse<OrderFilterResponse>>> filterByAdmin(@Valid @ModelAttribute FilterOrderAdmin request) {
+        FilterResponse<OrderFilterResponse> response = orderService.filterByAdmin(request);
+        return ResponseEntity.status(HttpStatus.OK).body(Response.<FilterResponse<OrderFilterResponse>>builder()
                 .data(response)
                 .build());
     }

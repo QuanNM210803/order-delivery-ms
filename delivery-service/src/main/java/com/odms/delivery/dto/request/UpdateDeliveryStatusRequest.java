@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateStatusDeliveryRequest {
+public class UpdateDeliveryStatusRequest {
 
     @NotBlank(message = "Mã đơn hàng không được để trống")
     private String orderCode;

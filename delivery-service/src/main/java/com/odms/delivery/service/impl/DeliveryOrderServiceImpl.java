@@ -11,7 +11,8 @@ import com.odms.delivery.dto.TypeMail;
 import com.odms.delivery.dto.event.NotificationEvent;
 import com.odms.delivery.dto.event.OrderCreateEvent;
 import com.odms.delivery.dto.event.UpdateDeliveryStatusEvent;
-import com.odms.delivery.dto.request.UpdateStatusDeliveryRequest;
+import com.odms.delivery.dto.event.UpdateDeliveryStatusToOrderEvent;
+import com.odms.delivery.dto.request.UpdateDeliveryStatusRequest;
 import com.odms.delivery.dto.request.internal.IdListRequest;
 import com.odms.delivery.dto.response.IDResponse;
 import com.odms.delivery.dto.response.Response;
@@ -67,13 +68,6 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                 .id(orderCreateEvent.getId())
                 .orderCode(orderCreateEvent.getOrderCode())
                 .deliveryStaffId(orderCreateEvent.getDeliveryStaffId())
-                .senderName(orderCreateEvent.getSenderName())
-                .pickupAddress(orderCreateEvent.getPickupAddress())
-                .receiverName(orderCreateEvent.getReceiverName())
-                .receiverPhone(orderCreateEvent.getReceiverPhone())
-                .deliveryAddress(orderCreateEvent.getDeliveryAddress())
-                .description(orderCreateEvent.getDescription())
-                .shippingFee(orderCreateEvent.getShippingFee())
                 .statusHistory(List.of(
                         StatusHistory.builder()
                                 .status(OrderStatus.CREATED)
@@ -87,7 +81,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
 
     @Override
     @SneakyThrows
-    public IDResponse<String> updateDeliveryOrderStatus(UpdateStatusDeliveryRequest request) {
+    public IDResponse<String> updateDeliveryOrderStatus(UpdateDeliveryStatusRequest request) {
         List<String> roles = WebUtils.getRoles();
         if(!roles.contains("CUSTOMER") && !roles.contains("ADMIN") && !roles.contains("DELIVERY_STAFF")) {
             throw new AppException(ErrorCode.ACCESS_DENIED);
@@ -133,6 +127,9 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             String fullName = WebUtils.getCurrentFullName();
             this.sendMessageUpdateToTracking(orderCode, request.getStatus(), fullName,
                     ReasonCancel.CUSTOMER_CANCEL_BEFORE_ASSIGN, null, null);
+
+            // send order-service to update delivery status
+            this.sendMessageUpdateToOrderService(request.getOrderCode(), request.getStatus(), null);
         }
 
         if(roles.contains("ADMIN")) {
@@ -150,7 +147,8 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             }
 
             // get customerId
-            Integer customerId = this.getCustomerId(request.getOrderCode());
+            OrderResponse orderInfo = this.getOrderInfo(request.getOrderCode());
+            Integer customerId = Objects.requireNonNull(orderInfo).getCustomerId();
             Integer deliveryStaffId = request.getDeliveryStaffId();
 
             // get email of customer and delivery staff
@@ -178,10 +176,10 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                     .typeMail(TypeMail.ASSIGNED_CUSTOMER)
                     .recipient(emailCustomer)
                     .content("Mã đơn hàng: " + request.getOrderCode() +
-                            "\nMô tả đơn hàng: " + deliveryOrder.getDescription() +
-                            "\nTên người nhận: " + deliveryOrder.getReceiverName() +
-                            "\nĐịa chỉ nhận hàng: " + deliveryOrder.getDeliveryAddress() +
-                            "\nSố điện thoại người nhận: " + deliveryOrder.getReceiverPhone() +
+                            "\nMô tả đơn hàng: " + orderInfo.getDescription() +
+                            "\nTên người nhận: " + orderInfo.getReceiverName() +
+                            "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
+                            "\nSố điện thoại người nhận: " + orderInfo.getReceiverPhone() +
                             "\nNhân viên giao hàng: " + fullNameDeliveryStaff +
                             "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
                     .build();
@@ -193,11 +191,11 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                     .typeMail(TypeMail.ASSIGNED_DELIVERY)
                     .recipient(emailDeliveryStaff)
                     .content("Mã đơn hàng: " + request.getOrderCode() +
-                            "\nMô tả đơn hàng: " + deliveryOrder.getDescription() +
-                            "\nĐịa chỉ lấy hàng: " + deliveryOrder.getPickupAddress() +
-                            "\nTên người nhận: " + deliveryOrder.getReceiverName() +
-                            "\nĐịa chỉ nhận hàng: " + deliveryOrder.getDeliveryAddress() +
-                            "\nSố điện thoại người nhận: " + deliveryOrder.getReceiverPhone() +
+                            "\nMô tả đơn hàng: " + orderInfo.getDescription() +
+                            "\nĐịa chỉ lấy hàng: " + orderInfo.getPickupAddress() +
+                            "\nTên người nhận: " + orderInfo.getReceiverName() +
+                            "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
+                            "\nSố điện thoại người nhận: " + orderInfo.getReceiverPhone() +
                             "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
                     .build();
             String notificationJsonDS = objectMapper.writeValueAsString(notificationEventDS);
@@ -206,6 +204,9 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             // send to tracking service
             this.sendMessageUpdateToTracking(request.getOrderCode(), request.getStatus(), WebUtils.getCurrentFullName(),
                     null, null, deliveryStaffId);
+
+            // send order-service to update delivery status
+            this.sendMessageUpdateToOrderService(request.getOrderCode(), request.getStatus(), request.getDeliveryStaffId());
 
         }
 
@@ -231,7 +232,8 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             }
 
             // get customerId
-            Integer customerId = this.getCustomerId(request.getOrderCode());
+            OrderResponse orderInfo = this.getOrderInfo(request.getOrderCode());
+            Integer customerId = Objects.requireNonNull(orderInfo).getCustomerId();
 
             // get email of customer and info delivery staff
             Map<Integer, UserResponse> data = this.getUserInfo(List.of(customerId, userId));
@@ -258,8 +260,8 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                         .typeMail(TypeMail.CANCELLED)
                         .recipient(emailCustomer)
                         .content("Mã đơn hàng: " + request.getOrderCode() +
-                                "\nMô tả đơn hàng: " + deliveryOrder.getDescription() +
-                                "\nSố điện thoại người nhận: " + deliveryOrder.getReceiverPhone() +
+                                "\nMô tả đơn hàng: " + orderInfo.getDescription() +
+                                "\nSố điện thoại người nhận: " + orderInfo.getReceiverPhone() +
                                 "\nNhân viên giao hàng: " + fullNameDeliveryStaff +
                                 "\nSố điện thoại nhân viên giao hàng: " + phoneDeliveryStaff +
                                 "\nLý do hủy: " + request.getReasonCancel().getDescription() + (request.getNoteCancel()!=null ? " - " + request.getNoteCancel(): "") +
@@ -274,9 +276,9 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                         .typeMail(TypeMail.COMPLETED)
                         .recipient(emailCustomer)
                         .content("Mã đơn hàng: " + request.getOrderCode() +
-                                "\nMô tả đơn hàng: " + deliveryOrder.getDescription() +
-                                "\nTên người nhận: " + deliveryOrder.getReceiverName() +
-                                "\nĐịa chỉ nhận hàng: " + deliveryOrder.getDeliveryAddress() +
+                                "\nMô tả đơn hàng: " + orderInfo.getDescription() +
+                                "\nTên người nhận: " + orderInfo.getReceiverName() +
+                                "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
                                 "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
                         .build();
                 String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventComplete);
@@ -286,6 +288,9 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             // send to tracking service
             this.sendMessageUpdateToTracking(request.getOrderCode(), request.getStatus(), fullNameDeliveryStaff,
                     request.getReasonCancel(), request.getNoteCancel(), null);
+
+            // send order-service to update delivery status
+            this.sendMessageUpdateToOrderService(request.getOrderCode(), request.getStatus(), null);
         }
 
         return IDResponse.<String>builder()
@@ -333,7 +338,8 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
     }
 
-    private Integer getCustomerId(String orderCode) {
+    // call order-service
+    private OrderResponse getOrderInfo(String orderCode) {
         try{
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
@@ -348,13 +354,14 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                     typeRef,
                     orderCode
             );
-            return Objects.requireNonNull(response.getBody()).getData().getCustomerId();
+            return Objects.requireNonNull(response.getBody()).getData();
         } catch (Exception exception) {
             this.throwException(exception.getMessage());
             return null;
         }
     }
 
+    // call auth-service
     private Map<Integer, UserResponse> getUserInfo(List<Integer> ids){
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -378,6 +385,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
         }
     }
 
+    // call auth-service to update delivery staff status finding order
     private Integer updateFindOrderStatus(Integer deliveryStaffId) {
         try{
             HttpHeaders headers = new HttpHeaders();
@@ -400,6 +408,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
         }
     }
 
+    // call order-service to check if customerId matches orderCode
     private Boolean checkCustomerIdMatchOrderCode(Integer customerId, String orderCode) {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -455,5 +464,17 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                 .build();
         String updateDeliveryStatusEventJson = objectMapper.writeValueAsString(updateDeliveryStatusEvent);
         kafkaTemplate.send("update-delivery-status-tracking-topic", updateDeliveryStatusEventJson);
+    }
+
+    private void sendMessageUpdateToOrderService(String orderCode, OrderStatus status, Integer deliveryStaffId) throws Exception {
+        UpdateDeliveryStatusToOrderEvent updateStatusToOrderEvent = UpdateDeliveryStatusToOrderEvent.builder()
+                .orderCode(orderCode)
+                .status(status)
+                .deliveryStaffId(deliveryStaffId)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String updateStatusDelivery = objectMapper.writeValueAsString(updateStatusToOrderEvent);
+        kafkaTemplate.send("update-delivery-status-order-topic", updateStatusDelivery);
     }
 }

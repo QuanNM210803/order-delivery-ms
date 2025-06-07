@@ -2,11 +2,18 @@ package com.odms.order.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.odms.order.dto.PageInfo;
 import com.odms.order.dto.event.OrderCreateEvent;
 import com.odms.order.dto.event.OrderCreateEventTracking;
 import com.odms.order.dto.event.StatusHistory;
+import com.odms.order.dto.event.UpdateDeliveryStatusEvent;
+import com.odms.order.dto.request.FilterOrderAdmin;
+import com.odms.order.dto.request.FilterOrderCustomer;
+import com.odms.order.dto.request.FilterOrderDelivery;
 import com.odms.order.dto.request.OrderRequest;
+import com.odms.order.dto.response.FilterResponse;
 import com.odms.order.dto.response.IDResponse;
+import com.odms.order.dto.response.OrderFilterResponse;
 import com.odms.order.dto.response.OrderResponse;
 import com.odms.order.entity.Order;
 import com.odms.order.entity.enumerate.OrderStatus;
@@ -19,10 +26,16 @@ import com.odms.order.service.IShippingFeeService;
 import com.odms.order.utils.WebUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -61,6 +74,8 @@ public class OrderServiceImpl implements IOrderService {
                 .price(orderRequest.getPrice())
                 .distance(distance)
                 .shippingFee(shippingFee)
+                .orderStatus(OrderStatus.CREATED)
+                .senderName(WebUtils.getCurrentFullName())
                 .build();
         orderRepository.save(order);
 
@@ -70,13 +85,6 @@ public class OrderServiceImpl implements IOrderService {
                 .id(UUID.randomUUID().toString())
                 .orderCode(order.getOrderCode())
                 .deliveryStaffId(null)
-                .senderName(fullName)
-                .pickupAddress(order.getPickupAddress())
-                .receiverName(order.getReceiverName())
-                .receiverPhone(order.getReceiverPhone())
-                .deliveryAddress(order.getDeliveryAddress())
-                .description(order.getDescription())
-                .shippingFee(shippingFee)
                 .createdAt(order.getCreatedAt())
                 .createdBy(customerId)
                 .build();
@@ -147,6 +155,177 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
     }
 
+    @Override
+    public void updateStatusDelivery(UpdateDeliveryStatusEvent request) {
+        Optional<Order> orderOptional = orderRepository.findByOrderCode(request.getOrderCode());
+        if(orderOptional.isEmpty()){
+            throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+        }
+        Order order = orderOptional.get();
+        order.setOrderStatus(request.getStatus());
+        order.setDeliveryStaffId(request.getDeliveryStaffId());
+        orderRepository.save(order);
+    }
+
+    @Override
+    public FilterResponse<OrderFilterResponse> filterByCustomer(FilterOrderCustomer request) {
+        int pageIndex = request.getPageIndex() != null ? request.getPageIndex() - 1 : 0;
+        int pageSize = request.getPageSize() != null ? request.getPageSize() : 10;
+
+        Integer customerId = WebUtils.getCurrentUserId();
+        String orderCode = StringUtils.isNoneBlank(request.getOrderCode()) ? request.getOrderCode().trim() : null;
+        String receiverName = StringUtils.isNoneBlank(request.getReceiverName()) ? request.getReceiverName().trim().toLowerCase() : null;
+        String receiverPhone = StringUtils.isNoneBlank(request.getReceiverPhone()) ? request.getReceiverPhone().trim() : null;
+        List<OrderStatus> orderStatuses = request.getOrderStatuses();
+
+        LocalDateTime startDate = request.getStartDate()!=null ? request.getStartDate().atStartOfDay() : null;
+        LocalDateTime endDate = request.getEndDate()!=null ? request.getEndDate().atTime(23, 59, 59) : null;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+
+        Page<Order> orderPage = orderRepository.filterByCustomer(
+                customerId,
+                orderCode,
+                receiverName,
+                receiverPhone,
+                orderStatuses,
+                startDate,
+                endDate,
+                pageable
+        );
+        PageInfo pageInfo = PageInfo.builder()
+                .pageIndex(orderPage.getNumber() + 1)
+                .pageSize(orderPage.getSize())
+                .totalElements(orderPage.getTotalElements())
+                .totalPages(orderPage.getTotalPages())
+                .hasNextPage(orderPage.hasNext())
+                .build();
+        List<Order> orders = orderPage.getContent();
+        List<OrderFilterResponse> orderFilterResponses = orders.stream()
+                .map(order -> OrderFilterResponse.builder()
+                        .orderCode(order.getOrderCode())
+                        .receiverName(order.getReceiverName())
+                        .receiverPhone(order.getReceiverPhone())
+                        .deliveryAddress(order.getDeliveryAddress())
+                        .description(order.getDescription())
+                        .shippingFee(formatCurrency(order.getShippingFee()))
+                        .orderStatus(order.getOrderStatus().getDescription())
+                        .build())
+                .toList();
+        return FilterResponse.<OrderFilterResponse>builder()
+                .data(orderFilterResponses)
+                .pageInfo(pageInfo)
+                .build();
+    }
+
+    @Override
+    public FilterResponse<OrderFilterResponse> filterByDelivery(FilterOrderDelivery request) {
+        int pageIndex = request.getPageIndex() != null ? request.getPageIndex() - 1 : 0;
+        int pageSize = request.getPageSize() != null ? request.getPageSize() : 10;
+
+        Integer deliveryStaffId = WebUtils.getCurrentUserId();
+        String orderCode = StringUtils.isNoneBlank(request.getOrderCode()) ? request.getOrderCode().trim() : null;
+        String senderName = StringUtils.isNoneBlank(request.getSenderName()) ? request.getSenderName().trim().toLowerCase() : null;
+        String description = StringUtils.isNoneBlank(request.getDescription()) ? request.getDescription().trim().toLowerCase() : null;
+
+        List<OrderStatus> orderStatuses = null;
+        OrderStatus status = request.getStatus();
+        if(status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED) {
+            orderStatuses = List.of(status);
+        } else {
+            orderStatuses = List.of(OrderStatus.ASSIGNED, OrderStatus.PICKED_UP, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED);
+        }
+
+        LocalDateTime startDate = request.getStartDate()!=null ? request.getStartDate().atStartOfDay() : null;
+        LocalDateTime endDate = request.getEndDate()!=null ? request.getEndDate().atTime(23, 59, 59) : null;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+
+        Page<Order> orderPage = orderRepository.filterByDelivery(
+                deliveryStaffId,
+                orderCode,
+                senderName,
+                description,
+                orderStatuses,
+                startDate,
+                endDate,
+                pageable
+        );
+        PageInfo pageInfo = PageInfo.builder()
+                .pageIndex(orderPage.getNumber() + 1)
+                .pageSize(orderPage.getSize())
+                .totalElements(orderPage.getTotalElements())
+                .totalPages(orderPage.getTotalPages())
+                .hasNextPage(orderPage.hasNext())
+                .build();
+        List<Order> orders = orderPage.getContent();
+        List<OrderFilterResponse> orderFilterResponses = orders.stream()
+                .map(order -> OrderFilterResponse.builder()
+                        .orderCode(order.getOrderCode())
+                        .senderName(order.getSenderName())
+                        .pickupAddress(order.getPickupAddress())
+                        .deliveryAddress(order.getDeliveryAddress())
+                        .description(order.getDescription())
+                        .orderStatus(order.getOrderStatus().getDescription())
+                        .build())
+                .toList();
+        return FilterResponse.<OrderFilterResponse>builder()
+                .data(orderFilterResponses)
+                .pageInfo(pageInfo)
+                .build();
+    }
+
+    @Override
+    public FilterResponse<OrderFilterResponse> filterByAdmin(FilterOrderAdmin request) {
+        int pageIndex = request.getPageIndex() != null ? request.getPageIndex() - 1 : 0;
+        int pageSize = request.getPageSize() != null ? request.getPageSize() : 10;
+
+        String orderCode = StringUtils.isNoneBlank(request.getOrderCode()) ? request.getOrderCode().trim() : null;
+        String senderName = StringUtils.isNoneBlank(request.getSenderName()) ? request.getSenderName().trim().toLowerCase() : null;
+        String description = StringUtils.isNoneBlank(request.getDescription()) ? request.getDescription().trim().toLowerCase() : null;
+        List<OrderStatus> orderStatuses = request.getOrderStatuses();
+
+        LocalDateTime startDate = request.getStartDate()!=null ? request.getStartDate().atStartOfDay() : null;
+        LocalDateTime endDate = request.getEndDate()!=null ? request.getEndDate().atTime(23, 59, 59) : null;
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+
+        Page<Order> orderPage = orderRepository.filterByAdmin(
+                orderCode,
+                senderName,
+                description,
+                orderStatuses,
+                startDate,
+                endDate,
+                pageable
+        );
+        PageInfo pageInfo = PageInfo.builder()
+                .pageIndex(orderPage.getNumber() + 1)
+                .pageSize(orderPage.getSize())
+                .totalElements(orderPage.getTotalElements())
+                .totalPages(orderPage.getTotalPages())
+                .hasNextPage(orderPage.hasNext())
+                .build();
+        List<Order> orders = orderPage.getContent();
+        List<OrderFilterResponse> orderFilterResponses = orders.stream()
+                .map(order -> OrderFilterResponse.builder()
+                        .orderCode(order.getOrderCode())
+                        .senderName(order.getSenderName())
+                        .pickupAddress(order.getPickupAddress())
+                        .deliveryAddress(order.getDeliveryAddress())
+                        .description(order.getDescription())
+                        .orderStatus(order.getOrderStatus().getDescription())
+                        .build())
+                .toList();
+        return FilterResponse.<OrderFilterResponse>builder()
+                .data(orderFilterResponses)
+                .pageInfo(pageInfo)
+                .build();
+    }
+
     private String generateOrderCode() {
         String timePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHH"));
         String random = this.generateRandomCode(4);
@@ -161,6 +340,11 @@ public class OrderServiceImpl implements IOrderService {
             sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
         }
         return sb.toString();
+    }
+
+    private String formatCurrency(Double value) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(value) + " VND";
     }
 
 }

@@ -1,4 +1,4 @@
-package com.odms.delivery.dto;
+package com.odms.order.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class PageInfo {
     private Integer pageIndex;
     private Integer pageSize;
-    private Integer totalElements;
+    private Long totalElements;
     private Integer totalPages;
     private Boolean hasNextPage;
 }

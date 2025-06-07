@@ -147,6 +147,7 @@ public class TrackingServiceImpl implements ITrackingService {
         return objectMapper.readValue(message, type);
     }
 
+    // call delivery service
     private DeliveryInfo getStatusHistory(String orderCode) {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -169,6 +170,7 @@ public class TrackingServiceImpl implements ITrackingService {
         }
     }
 
+    // call order-service
     private Order getOrderInfo(String orderCode) {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -190,6 +192,7 @@ public class TrackingServiceImpl implements ITrackingService {
         }
     }
 
+    // call auth-service
     private Map<Integer, UserResponse> getUserInfo(List<Integer> ids){
         try {
             HttpHeaders headers = new HttpHeaders();

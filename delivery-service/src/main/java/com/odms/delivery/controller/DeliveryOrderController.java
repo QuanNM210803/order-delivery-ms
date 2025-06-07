@@ -1,6 +1,6 @@
 package com.odms.delivery.controller;
 
-import com.odms.delivery.dto.request.UpdateStatusDeliveryRequest;
+import com.odms.delivery.dto.request.UpdateDeliveryStatusRequest;
 import com.odms.delivery.dto.response.IDResponse;
 import com.odms.delivery.dto.response.Response;
 import com.odms.delivery.dto.response.internal.DeliveryInfo;
@@ -28,7 +28,7 @@ public class DeliveryOrderController {
     @PatchMapping("/update-status")
     // This endpoint is for authenticated users to update the status of a delivery order
     // Authorization is handled by the service layer
-    public ResponseEntity<Response<IDResponse<String>>> updateDeliveryOrderStatus(@RequestBody @Valid UpdateStatusDeliveryRequest request) {
+    public ResponseEntity<Response<IDResponse<String>>> updateDeliveryOrderStatus(@RequestBody @Valid UpdateDeliveryStatusRequest request) {
         IDResponse<String> response = deliveryOrderService.updateDeliveryOrderStatus(request);
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<IDResponse<String>>builder()

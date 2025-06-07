@@ -1,5 +1,6 @@
 package com.odms.order.entity;
 
+import com.odms.order.entity.enumerate.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,4 +59,13 @@ public class Order extends BaseEntity{
     @Column(name = "shipping_fee", nullable = false)
     private Double shippingFee;
 
+    @Column(name = "order_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
+    @Column(name = "sender_name", nullable = false)
+    private String senderName;
+
+    @Column(name = "delivery_staff_id", nullable = true)
+    private Integer deliveryStaffId;
 }
