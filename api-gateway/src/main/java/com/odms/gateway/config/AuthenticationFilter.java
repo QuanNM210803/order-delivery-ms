@@ -32,7 +32,9 @@ public class AuthenticationFilter implements GlobalFilter {
             "/auth/auth/login",
             "/auth/auth/register/customer",
             "/auth/auth/verify-email",
-            "/order/shipping-fee/matrix"
+            "/order/shipping-fee/matrix",
+            "/order/shipping-fee/estimate-shipping-fee",
+            "/tracking/tracking/public/order/details",
     };
 
     @Value("${app.api-prefix}")

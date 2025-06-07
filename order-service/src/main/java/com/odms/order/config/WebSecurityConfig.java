@@ -26,6 +26,9 @@ public class WebSecurityConfig {
     private static final String[] PUBLIC_URLS = {
             "/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html",
             "/shipping-fee/matrix",
+            "/shipping-fee/estimate-shipping-fee",
+            "/order/internal/check-customer-id/**",
+            "/order/internal/order/**"
 
     };
 

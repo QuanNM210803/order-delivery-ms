@@ -1,5 +1,6 @@
 package com.odms.delivery.config;
 
+import com.odms.delivery.dto.UserInfo;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,12 +41,19 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             String jwt = parseJwt(request);
             if(jwt != null){
                 Integer userId = this.jwtTokenUtil.extractUserId(jwt);
+                String fullName = this.jwtTokenUtil.extractFullName(jwt);
+                String email = this.jwtTokenUtil.extractEmail(jwt);
+                UserInfo userInfo = UserInfo.builder()
+                        .userId(userId)
+                        .fullName(fullName)
+                        .email(email)
+                        .build();
 
                 Collection<String> roles = this.jwtTokenUtil.extractAuthorities(jwt);
                 List<GrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-                var authentication = new UsernamePasswordAuthenticationToken(userId, null, authorities);
+                var authentication = new UsernamePasswordAuthenticationToken(userInfo, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

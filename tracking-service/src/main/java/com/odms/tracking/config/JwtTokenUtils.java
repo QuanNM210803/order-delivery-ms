@@ -33,8 +33,12 @@ public class JwtTokenUtils {
                 .getBody();
     }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+    public String extractFullName(String token) {
+        return extractAllClaims(token).get("full_name", String.class);
+    }
+
+    public String extractEmail(String token) {
+        return extractAllClaims(token).get("email", String.class);
     }
 
     public Integer extractUserId(String token) {

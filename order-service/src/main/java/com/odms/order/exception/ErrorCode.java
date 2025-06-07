@@ -11,6 +11,8 @@ public enum ErrorCode {
     ERROR(500, "Đã xảy ra lỗi, vui lòng thử lại sau!", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_FORMAT(101, "Sai định dạng dữ liệu đầu vào", HttpStatus.BAD_REQUEST),
 
+    ORDER_NOT_FOUND(4001, "Không tìm thấy đơn hàng", HttpStatus.NOT_FOUND),
+
     ;
 
     ErrorCode(Integer code, String message, HttpStatusCode statusCode) {

@@ -49,7 +49,7 @@ public class DeliveryStaffController {
         );
     }
 
-    @PatchMapping("/internal/update/status-finding-order/{userId}")
+    @GetMapping("/internal/update/status-finding-order/{userId}")
     public ResponseEntity<Response<IDResponse<Integer>>> internalUpdateStatusFindingOrder(@PathVariable Integer userId, HttpServletRequest request) {
         String x_internal_token = request.getHeader("X-Internal-Token");
         if (!X_INTERNAL_TOKEN.equals(x_internal_token)) {

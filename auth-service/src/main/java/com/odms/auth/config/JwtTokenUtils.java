@@ -39,6 +39,9 @@ public class JwtTokenUtils {
                 .toList();
         claims.put("roles", roles);
         claims.put("user_id", user.getUserId());
+        claims.put("email", user.getEmail());
+        claims.put("phone", user.getPhone());
+        claims.put("full_name", user.getFullName());
         try {
             return Jwts.builder()
                     .setClaims(claims)
@@ -67,10 +70,6 @@ public class JwtTokenUtils {
 
     public void verifyToken(String token) {
         extractAllClaims(token);
-    }
-
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
     }
 
     public Integer extractUserId(String token) {
@@ -110,10 +109,6 @@ public class JwtTokenUtils {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public void verifyTokenVerifyEmail(String token) {
-        extractAllClaimsVerifyEmail(token);
     }
 
     public Integer extractUserIdVerifyEmail(String token) {

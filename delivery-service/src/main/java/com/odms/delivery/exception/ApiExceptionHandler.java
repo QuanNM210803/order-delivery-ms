@@ -21,11 +21,16 @@ public class ApiExceptionHandler {
     protected ResponseEntity<Response<Object>> handleAppException(AppException appException) {
         log.error("AppException: {}", appException.getMessage(), appException);
         ErrorCode errorCode = appException.getErrorCode();
-        Response<Object> responseError = Response.builder()
-                .code(errorCode.getCode())
-                .message(errorCode.getMessage())
-                .build();
-        return ResponseEntity.status(errorCode.getStatusCode()).body(responseError);
+        if(errorCode != null) {
+            Response<Object> responseError = Response.builder()
+                    .code(errorCode.getCode())
+                    .message(errorCode.getMessage())
+                    .build();
+            return ResponseEntity.status(errorCode.getStatusCode()).body(responseError);
+        } else {
+            Response<Object> responseError = (Response<Object>) appException.getResponse();
+            return ResponseEntity.status(appException.getStatusCode()).body(responseError);
+        }
     }
 
     // validate error

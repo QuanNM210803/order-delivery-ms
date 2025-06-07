@@ -41,20 +41,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/init-db-postgres.sql:/docker-entrypoint-initdb.d/init-db-postgres.sql:ro
-#
-#  mongodb:
-#    image: mongo:6
-#    container_name: mongodb-odms
-#    hostname: mongo
-#    restart: no
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: root
-#    ports:
-#      - "27017:27017"
-#    volumes:
-#      - mongo_data:/data/db
-#      - ./scripts/init-db-mongo.js:/docker-entrypoint-initdb.d/init-db-mongo.js:ro
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb-odms
+    hostname: mongo
+    restart: no
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts/init-db-mongo.js:/docker-entrypoint-initdb.d/init-db-mongo.js:ro
 
   redis:
     image: redis:7
@@ -66,108 +66,8 @@ services:
     volumes:
       - redis_data:/data
 
-#  gateway:
-#    build:
-#      context: ./gateway
-#    container_name: gateway
-#    ports:
-#      - "8888:8888"
-#    environment:
-#      - HOST_AUTHOR_SERVICE=author-service
-#      - HOST_COMPOSER_SERVICE=composer-service
-#      - HOST_POST_SERVICE=post-service
-#      - HOST_QUERY_SERVICE=query-service
-#      - HOST_TAG_SERVICE=tag-service
-#    depends_on:
-#      - kafka
-#      - mysql
-#      - postgres
-#      - mongodb
-#
-#  author-service:
-#    build:
-#      context: ./services/author-service
-#    container_name: author-service
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      - DB_HOST=postgres
-#    depends_on:
-#      - kafka
-#      - mysql
-#      - postgres
-#      - mongodb
-#
-#  composer-service:
-#    build:
-#      context: ./services/composer-service
-#    container_name: composer-service
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      - HOST_AUTHOR_SERVICE=author-service
-#      - HOST_POST_SERVICE=post-service
-#      - HOST_TAG_SERVICE=tag-service
-#    depends_on:
-#      - kafka
-#      - mysql
-#      - postgres
-#      - mongodb
-#
-#  post-service:
-#    build:
-#      context: ./services/post-service
-#    container_name: post-service
-#    ports:
-#      - "8082:8082"
-#    environment:
-#      - HOST_AUTHOR_SERVICE=author-service
-#      - HOST_TAG_SERVICE=tag-service
-#      - DB_HOST=postgres
-#      - KAFKA_HOST=kafka
-#    depends_on:
-#      - kafka
-#      - mysql
-#      - postgres
-#      - mongodb
-#
-#  query-service:
-#    build:
-#      context: ./services/query-service
-#    container_name: query-service
-#    ports:
-#      - "8083:8083"
-#    environment:
-#      - DB_HOST=mongodb
-#      - KAFKA_HOST=kafka
-#    depends_on:
-#      - kafka
-#      - mysql
-#      - postgres
-#      - mongodb
-#
-#  tag-service:
-#    build:
-#      context: ./services/tag-service
-#    container_name: tag-service
-#    ports:
-#      - "8084:8084"
-#    environment:
-#      - DB_HOST=mysql
-#    depends_on:
-#      - kafka
-#      - mysql
-#      - postgres
-#      - mongodb
-#
-#  application:
-#    build:
-#      context: ./frontend
-#    container_name: application
-#    ports:
-#      - "5173:5173"
 volumes:
   mysql_data:
   postgres_data:
-#  mongo_data:
+  mongo_data:
   redis_data:

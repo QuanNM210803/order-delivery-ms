@@ -3,11 +3,17 @@ package com.odms.auth.service.impl;
 import com.odms.auth.dto.response.UserResponse;
 import com.odms.auth.entity.Role;
 import com.odms.auth.entity.User;
+import com.odms.auth.exception.AppException;
+import com.odms.auth.exception.ErrorCode;
 import com.odms.auth.repository.UserRepository;
 import com.odms.auth.service.IUserService;
 import com.odms.auth.utils.WebUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +34,17 @@ public class UserServiceImpl implements IUserService {
                         .map(Role::getName)
                         .toList())
                 .build();
+    }
+
+    @Override
+    public Map<Integer, UserResponse> getUserByIds(List<Integer> ids) {
+        List<User> users = userRepository.findAllByUserIdIn(ids);
+        return users.stream()
+                .collect(Collectors.toMap(User::getUserId, user -> UserResponse.builder()
+                        .userId(user.getUserId())
+                        .fullName(user.getFullName())
+                        .email(user.getEmail())
+                        .phone(user.getPhone())
+                        .build()));
     }
 }

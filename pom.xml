@@ -35,6 +35,7 @@
         <jwt.version>0.11.5</jwt.version>
         <postgresql.version>42.7.3</postgresql.version>
         <org.json>20231013</org.json>
+        <jedis.version>4.3.1</jedis.version>
     </properties>
 
     <dependencyManagement>

@@ -29,7 +29,8 @@ public class WebSecurityConfig {
             "/auth/login",
             "/auth/register/customer",
             "/auth/verify-email/**",
-            "/delivery-staff/internal/update/status-finding-order",
+            "/delivery-staff/internal/update/status-finding-order/**",
+            "/user/internal/info/users"
     };
 
     @Bean

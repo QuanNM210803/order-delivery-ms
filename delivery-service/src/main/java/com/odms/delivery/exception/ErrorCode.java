@@ -11,6 +11,12 @@ public enum ErrorCode {
     ERROR(500, "Đã xảy ra lỗi, vui lòng thử lại sau!", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_FORMAT(101, "Sai định dạng dữ liệu đầu vào", HttpStatus.BAD_REQUEST),
 
+    REASON_CANCEL_REQUIRED(2001, "Yêu cầu lý do huỷ đơn hàng", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_FOUND(2002, "Không tìm thấy đơn hàng", HttpStatus.NOT_FOUND),
+    ORDER_ALREADY_ASSIGNED(2003, "Đơn hàng đã được giao cho nhân viên giao hàng", HttpStatus.BAD_REQUEST),
+    ORDER_ALREADY_CANCELLED(2004, "Đơn hàng đã bị huỷ", HttpStatus.BAD_REQUEST),
+    ORDER_STATUS_NOT_ALLOW(2005, "Không thể cập nhật trạng thái này", HttpStatus.BAD_REQUEST)
+
     ;
 
     ErrorCode(Integer code, String message, HttpStatusCode statusCode) {

@@ -20,6 +20,14 @@ server:
   port: 8083
   servlet:
     context-path: /order
+  host_auth_service: ${HOST_AUTH_SERVICE:localhost}
+  host_delivery_service: ${HOST_DELIVERY_SERVICE:localhost}
+  host_notification_service: ${HOST_NOTIFICATION_SERVICE:localhost}
+  host_tracking_service: ${HOST_TRACKING_SERVICE:localhost}
+  port_auth_service: ${PORT_AUTH_SERVICE:8080}
+  port_delivery_service: ${PORT_DELIVERY_SERVICE:8081}
+  port_notification_service: ${PORT_NOTIFICATION_SERVICE:8082}
+  port_tracking_service: ${PORT_TRACKING_SERVICE:8084}
 
 springdoc:
   swagger-ui:
@@ -30,6 +38,7 @@ springdoc:
 jwt:
   expiration: 86400 # 1 day in seconds
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+  x-internal-token: k118wSpPDIVURys
 
 api-key:
   open_route_service: 5b3ce3597851110001cf62487f52190f230a41729e796039db4d4c45
