@@ -16,6 +16,7 @@ import com.odms.delivery.dto.request.UpdateDeliveryStatusRequest;
 import com.odms.delivery.dto.request.internal.IdListRequest;
 import com.odms.delivery.dto.response.IDResponse;
 import com.odms.delivery.dto.response.Response;
+import com.odms.delivery.dto.response.UpdateDeliveryStatusResponse;
 import com.odms.delivery.dto.response.internal.DeliveryInfo;
 import com.odms.delivery.dto.response.internal.OrderResponse;
 import com.odms.delivery.dto.response.internal.UserResponse;
@@ -81,7 +82,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
 
     @Override
     @SneakyThrows
-    public IDResponse<String> updateDeliveryOrderStatus(UpdateDeliveryStatusRequest request) {
+    public UpdateDeliveryStatusResponse updateDeliveryOrderStatus(UpdateDeliveryStatusRequest request) {
         List<String> roles = WebUtils.getRoles();
         if(!roles.contains("CUSTOMER") && !roles.contains("ADMIN") && !roles.contains("DELIVERY_STAFF")) {
             throw new AppException(ErrorCode.ACCESS_DENIED);
@@ -293,8 +294,9 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             this.sendMessageUpdateToOrderService(request.getOrderCode(), request.getStatus(), null);
         }
 
-        return IDResponse.<String>builder()
-                .id(request.getOrderCode())
+        return UpdateDeliveryStatusResponse.builder()
+                .orderCode(request.getOrderCode())
+                .status(request.getStatus().getDescription())
                 .build();
     }
 
