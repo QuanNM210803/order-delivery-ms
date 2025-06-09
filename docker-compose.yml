@@ -168,7 +168,7 @@ services:
       - "8084:8084"
     environment:
       - KAFKA_HOST=kafka
-      - KAFKA_PORT=9094
+      - KAFKA_PORT=9092
       - HOST_AUTH_SERVICE=auth-service
       - HOST_DELIVERY_SERVICE=delivery-service
       - HOST_ORDER_SERVICE=order-service
