@@ -5,77 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e793ef6b-6701-468c-8e27-0e03802d021b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/PageInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/RoleName.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/FilterUserRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/PageRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/FilterResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/websocket/WebSocketConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/websocket/dto/UpdateFindStatusWS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/websocket/WebSocketConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/StatisticsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/StatisticsDeliveryProjection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/StatisticsDeliveryResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/IStatisticsService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/StatisticsServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/websocket/WebSocketConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/com/odms/gateway/config/CORSConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/com/odms/gateway/config/CORSConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/RegisterRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/UserResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IUserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/AuthServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/DeliveryStaffServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/DeliveryStaffServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/delivery-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/delivery-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/service/impl/DeliveryOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/service/impl/DeliveryOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/components/CreateOrderModal.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/components/OrderCancelModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/customer/components/OrderCancelModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/components/OrderTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/customer/components/OrderTable.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/components/StatusDropdownFilter.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/views/OrderDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/customer/views/OrderDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/guest/components/EstimatePanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/guest/components/EstimatePanel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/guest/components/LookupPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/guest/components/LookupPanel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/guest/views/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/guest/views/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/CustomerLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/CustomerLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/Layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/Layout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/components/Footer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/components/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/components/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/login/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/register/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/register/Register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/share/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/share/api/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/share/components/OrderStatus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/share/components/OrderStatus.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/share/components/OrderStatusPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/share/components/OrderStatusPanel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/share/stores/authStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/share/stores/authStore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/OrderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tracking-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/service/impl/TrackingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/service/impl/TrackingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,7 +209,7 @@
       <workItem from="1749313636629" duration="491000" />
       <workItem from="1749346627924" duration="27208000" />
       <workItem from="1749388099281" duration="11508000" />
-      <workItem from="1749436005204" duration="11089000" />
+      <workItem from="1749436005204" duration="12472000" />
     </task>
     <servers />
   </component>
