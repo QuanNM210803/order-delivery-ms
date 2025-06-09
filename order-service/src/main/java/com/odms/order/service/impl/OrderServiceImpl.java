@@ -163,7 +163,9 @@ public class OrderServiceImpl implements IOrderService {
         }
         Order order = orderOptional.get();
         order.setOrderStatus(request.getStatus());
-        order.setDeliveryStaffId(request.getDeliveryStaffId());
+        if(request.getStatus() == OrderStatus.ASSIGNED) {
+            order.setDeliveryStaffId(request.getDeliveryStaffId());
+        }
         orderRepository.save(order);
     }
 

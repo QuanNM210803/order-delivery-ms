@@ -1,11 +1,13 @@
 package com.odms.order.repository;
 
+import com.odms.order.dto.StatisticsDeliveryProjection;
 import com.odms.order.entity.Order;
 import com.odms.order.entity.enumerate.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -70,4 +72,33 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             LocalDateTime endDate,
             Pageable pageable
     );
+
+    @Query(value = """
+        SELECT
+            staff_stats.delivery_staff_id AS deliveryStaffId,
+            staff_stats.order_completed AS orderCompleted,
+            staff_stats.order_cancelled AS orderCancelled,
+            staff_stats.order_pending AS orderPending,
+            staff_stats.shipping_fee_total AS shippingFeeTotal,
+            staff_stats.ranking AS ranking
+        FROM (
+            SELECT
+                o.delivery_staff_id AS delivery_staff_id,
+                SUM(CASE WHEN o.order_status = 'COMPLETED' THEN 1 ELSE 0 END) AS order_completed,
+                SUM(CASE WHEN o.order_status = 'CANCELLED' THEN 1 ELSE 0 END) AS order_cancelled,
+                SUM(CASE WHEN (o.order_status = 'ASSIGNED' OR o.order_status = 'PICKED_UP' OR o.order_status = 'IN_TRANSIT' OR o.order_status = 'DELIVERED') THEN 1 ELSE 0 END) AS order_pending,
+                SUM(CASE WHEN o.order_status = 'COMPLETED' THEN o.shipping_fee ELSE 0 END) AS shipping_fee_total,
+                RANK() OVER (ORDER BY SUM(CASE WHEN o.order_status = 'COMPLETED' THEN o.shipping_fee ELSE 0 END) DESC) AS ranking
+            FROM orders o
+            WHERE o.created_at BETWEEN COALESCE(:startDate, o.created_at) AND COALESCE(:endDate, o.created_at)
+            GROUP BY o.delivery_staff_id
+        ) staff_stats
+        WHERE staff_stats.delivery_staff_id = :deliveryStaffId
+        """, nativeQuery = true)
+    Optional<StatisticsDeliveryProjection> getStatisticsForDeliveryStaff(
+            @Param("deliveryStaffId") Integer deliveryStaffId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
 }

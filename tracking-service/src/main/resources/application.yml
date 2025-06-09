@@ -3,7 +3,7 @@ spring:
     name: tracking-service
   kafka:
     consumer:
-      bootstrap-servers: ${KAFKA_HOST:localhost}:9094
+      bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9094}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: tracking-service
@@ -14,11 +14,9 @@ server:
     context-path: /tracking
   host_auth_service: ${HOST_AUTH_SERVICE:localhost}
   host_delivery_service: ${HOST_DELIVERY_SERVICE:localhost}
-  host_notification_service: ${HOST_NOTIFICATION_SERVICE:localhost}
   host_order_service: ${HOST_ORDER_SERVICE:localhost}
   port_auth_service: ${PORT_AUTH_SERVICE:8080}
   port_delivery_service: ${PORT_DELIVERY_SERVICE:8081}
-  port_notification_service: ${PORT_NOTIFICATION_SERVICE:8082}
   port_order_service: ${PORT_ORDER_SERVICE:8083}
   host_redis: ${HOST_REDIS:localhost}
   port_redis: ${PORT_REDIS:6379}

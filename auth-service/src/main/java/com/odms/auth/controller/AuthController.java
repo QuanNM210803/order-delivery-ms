@@ -1,6 +1,7 @@
 package com.odms.auth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.odms.auth.dto.RoleName;
 import com.odms.auth.dto.request.LoginRequest;
 import com.odms.auth.dto.request.RegisterRequest;
 import com.odms.auth.dto.request.VerifyRequest;
@@ -50,21 +51,15 @@ public class AuthController {
                 .build());
     }
 
-    @PostMapping("/register/deliverystaff")
+    @PostMapping("/register/system-user")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response<IDResponse<Integer>>> registerAccountDeliveryStaff(@Valid @RequestBody RegisterRequest request) throws JsonProcessingException {
-        String roleName = "DELIVERY_STAFF";
-        IDResponse<Integer> response = authService.registerAccount(request, roleName);
-        return ResponseEntity.status(HttpStatus.OK).body(Response.<IDResponse<Integer>>builder()
-                .data(response)
-                .message(Message.REGISTER_SUCCESS.getMessage())
-                .build());
-    }
-
-    @PostMapping("/register/admin")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response<IDResponse<Integer>>> registerAccountAdmin(@Valid @RequestBody RegisterRequest request) throws JsonProcessingException {
-        String roleName = "ADMIN";
+        String roleName = null;
+        if(RoleName.DELIVERY_STAFF.equals(request.getRoleName())){
+            roleName = "DELIVERY_STAFF";
+        } else if (RoleName.ADMIN.equals(request.getRoleName())) {
+            roleName = "ADMIN";
+        }
         IDResponse<Integer> response = authService.registerAccount(request, roleName);
         return ResponseEntity.status(HttpStatus.OK).body(Response.<IDResponse<Integer>>builder()
                 .data(response)

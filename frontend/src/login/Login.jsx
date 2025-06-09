@@ -19,7 +19,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    console.log("post this:", data);
     setLoading(true);
     try {
       const response = await authApi.login(data);

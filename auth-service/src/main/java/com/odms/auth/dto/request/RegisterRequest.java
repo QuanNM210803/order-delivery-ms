@@ -1,5 +1,6 @@
 package com.odms.auth.dto.request;
 
+import com.odms.auth.dto.RoleName;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -35,5 +36,7 @@ public class RegisterRequest {
     private String email;
 
     private String address;
+
+    private RoleName roleName;
 
 }

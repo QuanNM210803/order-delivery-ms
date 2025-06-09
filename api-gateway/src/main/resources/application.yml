@@ -54,3 +54,18 @@ spring:
             - Path=${app.api-prefix}/tracking/**
           filters:
             - StripPrefix=2
+
+        - id: websocket-route-auth-service
+          uri: ws://${server.host_auth_service}:${server.port_auth_service}
+          predicates:
+            - Path=/ws/**
+
+#        - id: websocket-route-order-service
+#          uri: ws://${server.host_order_service}:${server.port_order_service}
+#          predicates:
+#            - Path=/ws/**
+#
+#        - id: websocket-route-delivery-service
+#          uri: ws://${server.host_order_service}:${server.port_order_service}
+#          predicates:
+#            - Path=/ws/**

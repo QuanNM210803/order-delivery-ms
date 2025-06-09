@@ -93,7 +93,9 @@ public class AuthServiceImpl implements IAuthService {
             throw new AppException(ErrorCode.USERNAME_EXISTS);
         });
 
-        Role role = roleRepository.findByName(roleName).orElse(null);
+        Role role = roleRepository.findByName(roleName).orElseThrow(
+                () -> new AppException(ErrorCode.ERROR)
+        );
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))

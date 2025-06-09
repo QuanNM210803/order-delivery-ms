@@ -181,7 +181,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                             "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
                             "\nSố điện thoại người nhận: " + orderInfo.getReceiverPhone() +
                             "\nNhân viên giao hàng: " + fullNameDeliveryStaff +
-                            "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
+                            "\nClick để xem chi tiết: " + FRONTEND_URL + "/customer/order/detail/" + request.getOrderCode())
                     .build();
             String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventCustomer);
             kafkaTemplate.send("notification-topic", notificationJsonCustomer);
@@ -196,7 +196,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                             "\nTên người nhận: " + orderInfo.getReceiverName() +
                             "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
                             "\nSố điện thoại người nhận: " + orderInfo.getReceiverPhone() +
-                            "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
+                            "\nClick để xem chi tiết: " + FRONTEND_URL + "/delivery/order/detail/" + request.getOrderCode())
                     .build();
             String notificationJsonDS = objectMapper.writeValueAsString(notificationEventDS);
             kafkaTemplate.send("notification-topic", notificationJsonDS);
@@ -265,7 +265,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                                 "\nNhân viên giao hàng: " + fullNameDeliveryStaff +
                                 "\nSố điện thoại nhân viên giao hàng: " + phoneDeliveryStaff +
                                 "\nLý do hủy: " + request.getReasonCancel().getDescription() + (request.getNoteCancel()!=null ? " - " + request.getNoteCancel(): "") +
-                                "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
+                                "\nClick để xem chi tiết: " + FRONTEND_URL + "/customer/order/detail/" + request.getOrderCode())
                         .build();
                 String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventCancel);
                 kafkaTemplate.send("notification-topic", notificationJsonCustomer);
@@ -279,7 +279,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                                 "\nMô tả đơn hàng: " + orderInfo.getDescription() +
                                 "\nTên người nhận: " + orderInfo.getReceiverName() +
                                 "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
-                                "\nClick để xem chi tiết: " + FRONTEND_URL + "/order/detail/" + request.getOrderCode())
+                                "\nClick để xem chi tiết: " + FRONTEND_URL + "/customer/order/detail/" + request.getOrderCode())
                         .build();
                 String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventComplete);
                 kafkaTemplate.send("notification-topic", notificationJsonCustomer);

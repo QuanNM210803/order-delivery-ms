@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { trackingApi } from "src/share/api";
 import OrderStatusPanel from "src/share/components/OrderStatusPanel";
+import RequiredMark from "src/share/components/RequiredMark";
+import { useLoadingStore } from "src/share/stores/loadingStore";
 
 export default function LookupPanel() {
   const {
@@ -9,38 +13,23 @@ export default function LookupPanel() {
     formState: { errors },
   } = useForm();
 
-  const mockedOrderStatus = {
-    sender: {
-      name: "Nguyễn Văn A",
-      phone: "123456789",
-      pickupAddress: "Nam Từ Liêm",
-    },
-    recipent: {
-      name: "Nguyễn Văn B",
-      phone: "0987654321",
-      deliveryAddress: "Bắc Từ Liêm",
-    },
-    orderStatus: [
-      {
-        name: "CREATED",
-        timeStamp: "16:22 - 23/10/2025",
-        user: "Nguyễn Văn A",
-      },
-      {
-        name: "ASSIGNED",
-        timeStamp: "16:24 - 23/10/2025",
-        user: "Nguyễn Văn A",
-      },
-      {
-        name: "PICKED_UP",
-        timeStamp: "16:50 - 23/10/2025",
-        user: "Nguyễn Văn C",
-      },
-    ],
-  };
-  const [orderStatus, setOrderStatus] = useState(mockedOrderStatus);
+  const [orderStatus, setOrderStatus] = useState(null);
+  const setLoading = useLoadingStore((state) => state.setLoading);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const res = await trackingApi.getOrderDetailPublic(
+        data.orderCode,
+        data.phone_number,
+      );
+      setOrderStatus(res.data.data);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Có lỗi xảy ra");
+    } finally {
+      setLoading(false);
+    }
+
     console.log(data);
   };
 
@@ -54,7 +43,9 @@ export default function LookupPanel() {
           className="flex flex-col gap-0.5 min-w-72 max-w-72 mx-auto"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <label className="text-sm">Mã đơn hàng:</label>
+          <label className="text-sm">
+            Mã đơn hàng <RequiredMark />
+          </label>
           <input
             type="text"
             {...register("orderCode", {
@@ -68,7 +59,9 @@ export default function LookupPanel() {
             </span>
           )}
           <div className="flex flex-col gap-0.5">
-            <label className="text-sm">SĐT người nhận/gửi:</label>
+            <label className="text-sm">
+              SĐT người nhận/gửi <RequiredMark />
+            </label>
             <input
               type="text"
               {...register("phone_number", {
@@ -94,9 +87,14 @@ export default function LookupPanel() {
             Tra cứu
           </button>
         </form>
-        <div className="mt-8">
-          {orderStatus && <OrderStatusPanel orderStatus={orderStatus} />}
-        </div>
+        {orderStatus && (
+          <div className="mt-8">
+            <div className="mb-8 text-lg font-medium text-center">
+              Thông tin đơn hàng
+            </div>
+            <OrderStatusPanel orderStatus={orderStatus} />
+          </div>
+        )}
       </div>
     </div>
   );

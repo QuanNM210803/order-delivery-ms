@@ -92,6 +92,7 @@ public class TrackingServiceImpl implements ITrackingService {
             if (!order.getReceiverPhone().equals(phone) && !order.getSenderPhone().equals(phone)) {
                 throw new AppException(ErrorCode.ACCESS_DENIED);
             }
+            return this.mapToOrderResponse(order);
         }
 
         List<String> roles = WebUtils.getRoles();
@@ -129,7 +130,9 @@ public class TrackingServiceImpl implements ITrackingService {
             Order order = objectMapper.convertValue(raw, Order.class);
 
             order.getStatusHistory().add(updateDeliveryStatusEvent.getStatusHistory());
-            order.setDeliveryStaffId(updateDeliveryStatusEvent.getDeliveryStaffId());
+            if(updateDeliveryStatusEvent.getDeliveryStaffId() != null){
+                order.setDeliveryStaffId(updateDeliveryStatusEvent.getDeliveryStaffId());
+            }
             this.saveOrder(order);
         }
     }
@@ -224,6 +227,8 @@ public class TrackingServiceImpl implements ITrackingService {
                         .status(status.getStatus())
                         .createdBy(status.getCreatedBy())
                         .updatedAt(status.getUpdatedAt().format(formatter))
+                        .reasonCancel(status.getReasonCancel())
+                        .noteCancel(status.getNoteCancel())
                         .build())
                 .toList();
         return OrderResponse.builder()

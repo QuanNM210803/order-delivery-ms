@@ -1,10 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LookupPanel from "../components/LookupPanel";
 import EstimatePanel from "../components/EstimatePanel";
+import { useAuthStore } from "src/share/stores/authStore";
+import roles from "src/share/constants/roles";
+import { useNavigate } from "react-router";
 
 export default function Home() {
   // "Lookup" | "Estimate"
   const [currentTab, setCurrentTab] = useState("Lookup");
+  const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.roles[0] == roles.ADMIN) {
+      navigate("/admin/orders");
+    }
+    if (user?.roles[0] == roles.DELIVERY_STAFF) {
+      navigate("/delivery/orders/ongoing");
+    }
+  }, [user]);
 
   return (
     <div className="min-h-[100vh] pt-16">

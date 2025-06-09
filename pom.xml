@@ -71,7 +71,6 @@
                             <exclude>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
-                                <version>${org.lombok.version}</version>
                             </exclude>
                         </excludes>
                     </configuration>

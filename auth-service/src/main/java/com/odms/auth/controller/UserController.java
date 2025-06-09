@@ -1,16 +1,20 @@
 package com.odms.auth.controller;
 
+import com.odms.auth.dto.request.FilterUserRequest;
 import com.odms.auth.dto.request.internal.IdListRequest;
+import com.odms.auth.dto.response.FilterResponse;
 import com.odms.auth.dto.response.Response;
 import com.odms.auth.dto.response.UserResponse;
 import com.odms.auth.exception.AppException;
 import com.odms.auth.exception.ErrorCode;
 import com.odms.auth.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -45,6 +49,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 Response.<Map<Integer, UserResponse>>builder()
                         .data(user)
+                        .build()
+        );
+    }
+
+    @GetMapping("/filter")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response<FilterResponse<UserResponse>>> filterUsers(@Valid @ModelAttribute FilterUserRequest request) {
+        FilterResponse<UserResponse> response = userService.filterUsers(request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                Response.<FilterResponse<UserResponse>>builder()
+                        .data(response)
                         .build()
         );
     }

@@ -1,11 +1,10 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import Footer from "src/layout/components/Footer";
 import { authApi } from "src/share/api";
-import accountType from "src/share/constants/accountType";
 import { useLoadingStore } from "src/share/stores/loadingStore";
 import RiderImage from "src/assets/rider.jpg";
+import RequiredMark from "src/share/components/RequiredMark";
 
 export default function Register() {
   const {
@@ -43,7 +42,7 @@ export default function Register() {
             <div className="flex flex-row justify-between gap-3">
               <div className="w-[300px] flex flex-col gap-2">
                 <div className="flex flex-col gap-0.5">
-                  <label className="text-sm">Tên đăng nhập</label>
+                  <label className="text-sm">Tên đăng nhập <RequiredMark /></label>
                   <input
                     type="text"
                     {...register("username", {
@@ -58,7 +57,7 @@ export default function Register() {
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <label className="text-sm">Email</label>
+                  <label className="text-sm">Email <RequiredMark /></label>
                   <input
                     type="email"
                     {...register("email", {
@@ -77,7 +76,7 @@ export default function Register() {
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <label className="text-sm">Mật khẩu</label>
+                  <label className="text-sm">Mật khẩu <RequiredMark /></label>
                   <input
                     type="password"
                     {...register("password", {
@@ -93,7 +92,7 @@ export default function Register() {
                 </div>
 
                 <div className="flex flex-col gap-0.5">
-                  <label className="text-sm">Xác nhận mật khẩu</label>
+                  <label className="text-sm">Xác nhận mật khẩu <RequiredMark /></label>
                   <input
                     type="password"
                     {...register("confirmPassword", {
@@ -112,7 +111,7 @@ export default function Register() {
               </div>
               <div className="flex flex-col w-[300px] gap-2">
                 <div className="flex flex-col gap-0.5">
-                  <label className="text-sm">Họ và tên</label>
+                  <label className="text-sm">Họ và tên <RequiredMark /></label>
                   <input
                     type="text"
                     {...register("fullName", {
@@ -127,7 +126,7 @@ export default function Register() {
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <label className="text-sm">Số điện thoại</label>
+                  <label className="text-sm">Số điện thoại <RequiredMark /></label>
                   <input
                     type="text"
                     {...register("phone", {

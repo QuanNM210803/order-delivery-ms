@@ -4,17 +4,30 @@ import { useAuthStore } from "src/share/stores/authStore";
 import DeliveryIcon from "src/assets/headerdelivericon.svg";
 import Dropdown from "src/share/components/Dropdown";
 import { useMemo } from "react";
+import tokenUtils from "src/share/utils/tokenUtils";
+import { common } from "@mui/material/colors";
 
 export default function Header() {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const optionsList = useMemo(() => {
+  const commonOptionsList = useMemo(() => {
+    const handleLogout = () => {
+      logout();
+      tokenUtils.clearAccessToken();
+      navigate('/');
+    }
+
     return [
       {
-        text: "Đơn hàng của tôi",
-        handler: () => navigate("my-orders"),
+        text: "Trang cá nhân",
+        handler:() => navigate('/my-profile'),
+      },
+      {
+        text: "Đăng xuất",
+        handler: handleLogout,
       },
     ];
   }, []);
@@ -26,14 +39,14 @@ export default function Header() {
         onClick={() => navigate("/")}
       >
         <img className="max-h-16" src={DeliveryIcon} alt="Your SVG" />
-        <div>Odms</div>
+        <div>ODMS Express</div>
       </div>
       {user ? (
         <div className="text-white">
           <Dropdown
             align={"right"}
             text={user.fullName}
-            optionsList={optionsList}
+            optionsList={commonOptionsList}
           />
         </div>
       ) : (

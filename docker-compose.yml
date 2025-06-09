@@ -66,6 +66,127 @@ services:
     volumes:
       - redis_data:/data
 
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8888:8888"
+    environment:
+      - HOST_AUTH_SERVICE=auth-service
+      - HOST_DELIVERY_SERVICE=delivery-service
+      - HOST_NOTIFICATION_SERVICE=notification-service
+      - HOST_ORDER_SERVICE=order-service
+      - HOST_TRACKING_SERVICE=tracking-service
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    container_name: auth-service
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mysql
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+
+  delivery-service:
+    build:
+      context: .
+      dockerfile: delivery-service/Dockerfile
+    container_name: delivery-service
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=mongo
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+      - HOST_AUTH_SERVICE=auth-service
+      - HOST_ORDER_SERVICE=order-service
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    container_name: notification-service
+    ports:
+      - "8082:8082"
+    environment:
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+    container_name: order-service
+    ports:
+      - "8083:8083"
+    environment:
+      - DB_HOST=postgres
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+
+  tracking-service:
+    build:
+      context: .
+      dockerfile: tracking-service/Dockerfile
+    container_name: tracking-service
+    ports:
+      - "8084:8084"
+    environment:
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9094
+      - HOST_AUTH_SERVICE=auth-service
+      - HOST_DELIVERY_SERVICE=delivery-service
+      - HOST_ORDER_SERVICE=order-service
+      - HOST_REDIS=redis
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+
 volumes:
   mysql_data:
   postgres_data:

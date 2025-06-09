@@ -12,18 +12,8 @@ export default function Navbar() {
     return [
       {
         text: "Tra cứu",
-        isDropdown: true,
-        handler: null,
-        options: [
-          {
-            text: "Đơn hàng",
-            handler: () => navigate("/"),
-          },
-          {
-            text: "Cước phí",
-            handler: () => navigate("/"),
-          },
-        ],
+        isDropdown: false,
+        handler: () => navigate("/"),
       },
     ];
   }, []);
@@ -36,26 +26,93 @@ export default function Navbar() {
         handler: null,
         options: [
           {
-            text: "Danh sách đơn hàng",
-            handler: () => navigate("/my-orders"),
+            text: "Danh sách",
+            handler: () => navigate("customer/my-orders"),
           },
           {
-            text: "Xem thống kê",
-            handler: () => navigate("/orders-stat"),
+            text: "Tạo đơn hàng",
+            handler: () => navigate("customer/create-order"),
           },
         ],
       },
     ];
   }, []);
 
+  const adminNavbarItems = useMemo(() => {
+    return [
+      {
+        text: "Quản lí",
+        isDropdown: true,
+        handler: null,
+        options: [
+          {
+            text: "Đơn hàng",
+            handler: () => navigate("admin/orders"),
+          },
+          {
+            text: "Người dùng",
+            handler: () => navigate("admin/users"),
+          },
+        ],
+      },
+    ];
+  }, []);
+
+  const deliveryStaffItems = useMemo(() => {
+    return [
+      {
+        text: "Đơn hàng",
+        isDropdown: true,
+        handler: null,
+        options: [
+          {
+            text: "Đang thực hiện",
+            handler: () => navigate("delivery/orders/ongoing"),
+          },
+          {
+            text: "Đã hoàn thành",
+            handler: () => navigate("delivery/orders/completed"),
+          },
+          {
+            text: "Đã hủy",
+            handler: () => navigate("delivery/orders/cancelled"),
+          },
+        ],
+      },
+      {
+        text: "Thống kê",
+        isDropdown: false,
+        handler: () => navigate("delivery/statistics"),
+      },
+    ];
+  }, []);
+
   const navbarItems = useMemo(() => {
-    const items = [...commonNavbarItems];
+    const items = [];
+    if (user?.roles[0] == roles.CUSTOMER || !user) {
+      items.push(...commonNavbarItems);
+    }
+
     if (user?.roles[0] == roles.CUSTOMER) {
       items.push(...customerNavbarItems);
     }
 
+    if (user?.roles[0] == roles.ADMIN) {
+      items.push(...adminNavbarItems);
+    }
+
+    if (user?.roles[0] == roles.DELIVERY_STAFF) {
+      items.push(...deliveryStaffItems);
+    }
+
     return items;
-  }, [user, commonNavbarItems, customerNavbarItems]);
+  }, [
+    user,
+    commonNavbarItems,
+    customerNavbarItems,
+    adminNavbarItems,
+    deliveryStaffItems,
+  ]);
 
   return (
     <div className="bg-white sticky left-0 w-full top-0 h-14 shadow-md gap-8 flex flex-row items-center px-8 z-10">
