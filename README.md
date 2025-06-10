@@ -10,19 +10,26 @@
    git clone https://github.com/QuanNM210803/order-delivery-ms.git
    ```
 
-2. **Run with Docker Compose**
+2. **Clone this repository**
+
+   ```bash
+   In the notification-service configuration file, add your Brevo SMTP-key to be able to send mail.
+   Link to get free SMTP-key: https://app.brevo.com/
+   ```
+   
+3. **Run with Docker Compose**
 
    ```bash
    docker-compose up --build
    ```
 
-3. **Access Application**
+4. **Access Application**
 
    ```bash
    http://localhost:3000
    ```
 
-4. **Login**
+5. **Login**
 
    ```bash
    Account customer: customer/123456

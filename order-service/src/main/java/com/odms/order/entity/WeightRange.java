@@ -22,4 +22,7 @@ public class WeightRange {
 
     @Column(name = "to_gam")
     private Double toGam;
+
+    @Column(name = "unit_price", nullable = false)
+    private Double unitPrice;
 }

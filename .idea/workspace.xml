@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e793ef6b-6701-468c-8e27-0e03802d021b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/ApplicationInitConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/DistanceRange.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/DistanceRange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/WeightRange.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/WeightRange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/DistanceRangeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/DistanceRangeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/WeightRangeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/WeightRangeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/ShippingFeeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/ShippingFeeServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +25,8 @@
       <list>
         <option value="Enum" />
         <option value="Interface" />
-        <option value="Class" />
         <option value="Dockerfile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -207,6 +215,9 @@
       <workItem from="1749346627924" duration="27208000" />
       <workItem from="1749388099281" duration="11508000" />
       <workItem from="1749436005204" duration="16159000" />
+      <workItem from="1749475759902" duration="952000" />
+      <workItem from="1749484909714" duration="930000" />
+      <workItem from="1749527311698" duration="1341000" />
     </task>
     <servers />
   </component>

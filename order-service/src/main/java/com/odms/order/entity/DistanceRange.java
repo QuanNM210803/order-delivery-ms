@@ -22,4 +22,7 @@ public class DistanceRange {
 
     @Column(name = "to_m")
     private Double toM;
+
+    @Column(name = "unit_price", nullable = false)
+    private Double unitPrice;
 }

@@ -29,6 +29,7 @@ public class ShippingFeeServiceImpl implements IShippingFeeService {
     private final WeightRangeRepository weightRepo;
     private final ShippingFeeRepository shippingRepo;
     private final IGeoService geoService;
+    private final DistanceRangeRepository distanceRangeRepository;
 
     @Override
     public ShippingMatrixResponse getShippingMatrix() {
@@ -107,9 +108,11 @@ public class ShippingFeeServiceImpl implements IShippingFeeService {
 
     @Override
     public Double calculateShippingFee(Double distance, Double weight) {
+        DistanceRange distanceObject = distanceRangeRepository.findByDistanceRange(distance);
+        WeightRange weightObject = weightRepo.findByWeightRange(weight);
         distance = distance/1000; // Convert to km
         weight = weight/1000; // Convert to kg
-        return 25000 + (distance * 2000) + (weight * 1000); // Base fee + distance fee + weight fee
+        return 25000 + (distance * distanceObject.getUnitPrice()) + (weight * weightObject.getUnitPrice()); // Base fee + distance fee + weight fee
     }
 
     private Number normalizePrice(Double value) {
@@ -117,7 +120,7 @@ public class ShippingFeeServiceImpl implements IShippingFeeService {
         if (Math.floor(result) == result) {
             return (int) result;
         } else {
-            return Math.round(result * 1000.0) / 1000.0;
+            return Math.round(result * 100.0) / 100.0;
         }
     }
 

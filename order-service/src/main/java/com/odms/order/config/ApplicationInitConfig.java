@@ -37,33 +37,41 @@ public class ApplicationInitConfig {
             DistanceRange distanceRange1 = DistanceRange.builder()
                     .fromM(0.)
                     .toM(4000.)
+                    .unitPrice(2000.)
                     .build();
             DistanceRange distanceRange2 = DistanceRange.builder()
                     .fromM(4000.)
                     .toM(7000.)
+                    .unitPrice(2500.)
                     .build();
             DistanceRange distanceRange3 = DistanceRange.builder()
                     .fromM(7000.)
                     .toM(10000.)
+                    .unitPrice(3000.)
                     .build();
             DistanceRange distanceRange4 = DistanceRange.builder()
                     .fromM(10000.)
+                    .unitPrice(3500.)
                     .build();
 
             WeightRange weightRange1 = WeightRange.builder()
                     .fromGam(0.)
                     .toGam(1000.)
+                    .unitPrice(1000.)
                     .build();
             WeightRange weightRange2 = WeightRange.builder()
                     .fromGam(1000.)
                     .toGam(5000.)
+                    .unitPrice(1500.)
                     .build();
             WeightRange weightRange3 = WeightRange.builder()
                     .fromGam(5000.)
                     .toGam(10000.)
+                    .unitPrice(2000.)
                     .build();
             WeightRange weightRange4 = WeightRange.builder()
                     .fromGam(10000.)
+                    .unitPrice(2500.)
                     .build();
 
             List<DistanceRange> distances = List.of(distanceRange1, distanceRange2, distanceRange3, distanceRange4);
@@ -77,14 +85,14 @@ public class ApplicationInitConfig {
                     Double basePrice = 25000.;
                     Double distanceMin = Math.ceil((d.getFromM() != null ? d.getFromM() : 0) / 1000.0);
                     Double weightMin = Math.ceil((w.getFromGam() != null ? w.getFromGam() : 0) / 1000.0);
-                    Double fromPrice = basePrice + distanceMin * 2000 + weightMin * 1000;
+                    Double fromPrice = basePrice + distanceMin * d.getUnitPrice() + weightMin * w.getUnitPrice();
 
                     Double distanceMax = d.getToM() != null ? Math.ceil(d.getToM() / 1000.0) : null;
                     Double weightMax = w.getToGam() != null ? Math.ceil(w.getToGam() / 1000.0) : null;
 
                     Double toPrice = null;
                     if(distanceMax != null && weightMax != null) {
-                        toPrice = basePrice + distanceMax * 2000 + weightMax * 1000;
+                        toPrice = basePrice + distanceMax * d.getUnitPrice() + weightMax * w.getUnitPrice();
                     }
 
                     ShippingFee priceEntry = ShippingFee.builder()

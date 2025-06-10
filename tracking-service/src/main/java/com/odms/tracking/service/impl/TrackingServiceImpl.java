@@ -255,7 +255,7 @@ public class TrackingServiceImpl implements ITrackingService {
         if (Math.floor(result) == result) {
             return (int) result;
         } else {
-            return Math.round(result * 1000.0) / 1000.0;
+            return Math.round(result * 10.0) / 10.0;
         }
     }
 
