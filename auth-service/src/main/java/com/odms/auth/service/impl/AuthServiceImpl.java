@@ -88,9 +88,13 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
+    @Transactional
     public IDResponse<Integer> registerAccount(RegisterRequest request, String roleName) throws JsonProcessingException {
         userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
             throw new AppException(ErrorCode.USERNAME_EXISTS);
+        });
+        userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+            throw new AppException(ErrorCode.EMAIL_EXISTS);
         });
 
         Role role = roleRepository.findByName(roleName).orElseThrow(

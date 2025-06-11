@@ -16,7 +16,8 @@ public enum ErrorCode {
     LOGIN_FAILED(1003, "Sai tên đăng nhập hoặc mật khẩu", HttpStatus.UNAUTHORIZED),
     USER_NOT_VERIFIED(1004, "Tài khoản chưa được xác thực qua Email", HttpStatus.UNAUTHORIZED),
     USER_ALREADY_VERIFIED(1005, "Tài khoản đã được xác thực qua Email", HttpStatus.BAD_REQUEST),
-    UPDATE_STATUS_FINDING_ORDER_FAILED(1006, "Cập nhật trạng thái tìm đơn thất bại", HttpStatus.OK)
+    UPDATE_STATUS_FINDING_ORDER_FAILED(1006, "Cập nhật trạng thái tìm đơn thất bại", HttpStatus.OK),
+    EMAIL_EXISTS(1007, "Email đã tồn tại", HttpStatus.BAD_REQUEST),
 
     ;
 
