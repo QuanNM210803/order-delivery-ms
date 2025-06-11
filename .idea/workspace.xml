@@ -6,23 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e793ef6b-6701-468c-8e27-0e03802d021b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/com/odms/gateway/config/CORSConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/com/odms/gateway/config/CORSConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/admin/components/AdminOrderTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/admin/components/AdminOrderTable.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/admin/views/AdminOrderDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/admin/views/AdminOrderDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/components/OrderTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/customer/components/OrderTable.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/customer/views/CreateOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/customer/views/CreateOrder.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/deliveryStaff/components/StatusToggler.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/deliveryStaff/components/StatusToggler.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/deliveryStaff/components/UpdateOrderModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/deliveryStaff/components/UpdateOrderModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/deliveryStaff/views/DeliveryStaffOngoingOrders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/deliveryStaff/views/DeliveryStaffOngoingOrders.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/DeliveryStaffLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/DeliveryStaffLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/layout/Layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/layout/Layout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/profile/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/profile/Profile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/GeoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/GeoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -228,7 +212,7 @@
       <workItem from="1749484909714" duration="930000" />
       <workItem from="1749527311698" duration="2395000" />
       <workItem from="1749557594578" duration="7949000" />
-      <workItem from="1749629394535" duration="8465000" />
+      <workItem from="1749629394535" duration="10948000" />
     </task>
     <servers />
   </component>

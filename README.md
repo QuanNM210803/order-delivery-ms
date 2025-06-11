@@ -83,4 +83,23 @@
 - `tracking-service`:  
   Optimized for querying detailed order and delivery information efficiently, supporting tracking and monitoring use cases.
 
+## Application
+1. `Login View`
+   ![](./asset/login.jpg)
+2. `Register View`
+   ![](./asset/register.jpg)
+3. `Look up orders View`
+   ![](./asset/tra-cuu.jpg)
+4. `Estimated shipping cost View`
+   ![](./asset/uoc-luong-phi.jpg)
+5. `Create order View`
+   ![](./asset/tao-don-1.jpg)
+   ![](./asset/tao-don-2.jpg)
+6. `Order details View`
+   ![](./asset/chi-tiet-don-hang.jpg)
+7. `Admin View`
+   ![](./asset/danh-sach-don.jpg)
+    ![](./asset/danh-sach-nguoi-dung.jpg)
+8. `Statistics View`
+   ![](./asset/thong-ke-tai-xe.jpg)
 > The project is under development. 
