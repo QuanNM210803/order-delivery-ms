@@ -14,7 +14,6 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
-    "@stomp/stompjs": "^7.1.1",
     "@tailwindcss/vite": "^4.1.8",
     "axios": "^1.9.0",
     "highcharts": "^12.2.0",
@@ -26,7 +25,8 @@
     "react-spinners": "^0.17.0",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.3",
-    "sockjs-client": "^1.5.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.8",
     "zustand": "^5.0.5"
   },

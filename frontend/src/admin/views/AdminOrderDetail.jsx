@@ -6,6 +6,7 @@ import { useLoadingStore } from "src/share/stores/loadingStore";
 import OrderStatusPanel from "src/share/components/OrderStatusPanel";
 import orderStatus from "src/share/constants/orderStatus";
 import AssignmentAddIcon from "@mui/icons-material/AssignmentAdd";
+import AdminOrderAssignModal from "../components/AdminOrderAssignModal";
 
 export default function AdminOrderDetail() {
   const { orderCode } = useParams();
@@ -39,6 +40,23 @@ export default function AdminOrderDetail() {
   const handleAssignModalClose = () => {
     setAssigningId(null);
     setIsAssignModalShow(false);
+  };
+
+  const handleAssignOK = async (driverId) => {
+    setLoading(true);
+    try {
+      const res = await deliveryApi.updateOrderStatus({
+        orderCode: assigningId,
+        status: orderStatus.ASSIGNED,
+        deliveryStaffId: driverId,
+      });
+      toast.success(res.data.message);
+      setIsAssignModalShow(false);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Có lỗi xảy ra");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -86,6 +104,13 @@ export default function AdminOrderDetail() {
           </>
         )}
       </div>
+      {isAssignModalShow && (
+        <AdminOrderAssignModal
+          onCancel={handleAssignModalClose}
+          onOK={() => {}}
+          cancellingId={assigningId}
+        />
+      )}
     </div>
   );
 }

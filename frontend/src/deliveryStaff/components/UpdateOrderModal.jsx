@@ -41,7 +41,7 @@ export default function UpdateOrderModal({ onCancel, onOK, orderCode }) {
     deliveryApi
       .updateOrderStatus(payload)
       .then((res) => {
-        onOK();
+        onOK(res);
         toast.success(res.data.message);
       })
       .catch((err) => {

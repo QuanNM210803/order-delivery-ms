@@ -88,6 +88,7 @@ function App() {
         limit={5}
       />
       <LoadingOverlay />
+      <StatusToggler />
     </>
   );
 }

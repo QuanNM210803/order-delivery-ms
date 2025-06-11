@@ -99,14 +99,26 @@ export default function AdminOrderTable() {
       });
       toast.success(res.data.message);
       setIsAssignModalShow(false);
-      const queryString = convertToQueryString();
-      fetchData(queryString);
+      // const queryString = convertToQueryString();
+      // fetchData(queryString);
+      setTableData((state) => {
+        const newState = state.map((data) => {
+          if (data.orderCode == res.data.data.orderCode) {
+            return {
+              ...data,
+              orderStatus: res.data.data.status,
+            };
+          } else {
+            return data;
+          }
+        });
+        return newState;
+      });
     } catch (err) {
       toast.error(err?.response?.data?.message || "Có lỗi xảy ra");
     } finally {
       setLoading(false);
     }
-    console.log(driverId);
   };
 
   const convertToQueryString = () => {

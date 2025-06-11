@@ -13,7 +13,6 @@ export default function Profile() {
 
   useEffect(() => {
     setLoading(true);
-
     authApi
       .getMe()
       .then((res) => {

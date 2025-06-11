@@ -86,12 +86,22 @@ export default function DeliveryStaffOngoingOrders() {
     setIsModalOpen(true);
   };
 
-  const handleOK = () => {
+  const handleOK = (res) => {
     setEditingCode(null);
     setIsModalOpen(false);
-    setTimeout(() => {
-      handleFilter();
-    }, 1000);
+    setTableData((state) => {
+      const newState = state.map((data) => {
+        if (data.orderCode == res.data.data.orderCode) {
+          return {
+            ...data,
+            orderStatus: res.data.data.status,
+          };
+        } else {
+          return data;
+        }
+      });
+      return newState;
+    });
   };
 
   const handleCloseModal = () => {

@@ -36,7 +36,7 @@ public class GeoServiceImpl implements IGeoService {
                     .getJSONObject("properties")
                     .getJSONObject("summary");
 
-            return routes.getDouble("distance");
+            return routes.has("distance") ? routes.getDouble("distance") : 0.1;
         } catch (Exception e) {
             return null;
         }

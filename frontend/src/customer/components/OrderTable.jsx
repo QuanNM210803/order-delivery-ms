@@ -151,7 +151,20 @@ export default function OrderTable() {
       });
       toast.success(res.data.message);
       setIsCancelModalShow(false);
-      handleFilter();
+      // handleFilter();
+      setTableData((state) => {
+        const newState = state.map((data) => {
+          if (data.orderCode == res.data.data.orderCode) {
+            return {
+              ...data,
+              orderStatus: res.data.data.status,
+            };
+          } else {
+            return data;
+          }
+        });
+        return newState;
+      });
     } catch (err) {
       toast.success(err?.response?.data?.message ?? "Có lỗi xảy ra");
     } finally {

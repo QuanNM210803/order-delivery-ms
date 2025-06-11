@@ -39,8 +39,8 @@ export default function Layout() {
       <div>
         <Header />
         {user && <Navbar />}
-        <div className="w-full pb-80">
-          { !isFetchingUser && <Outlet /> }
+        <div className="w-full min-h-[100vh] pb-80">
+          {!isFetchingUser && <Outlet />}
         </div>
         <Footer />
       </div>
