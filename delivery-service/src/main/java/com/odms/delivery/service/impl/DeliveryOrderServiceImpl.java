@@ -34,6 +34,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -118,7 +119,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                     StatusHistory.builder()
                             .status(request.getStatus())
                             .createdBy(userId)
-                            .updatedAt(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime())
+                            .updatedAt(LocalDateTime.now())
                             .reasonCancel(ReasonCancel.CUSTOMER_CANCEL_BEFORE_ASSIGN)
                             .build()
             );
@@ -166,7 +167,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                     StatusHistory.builder()
                             .status(request.getStatus())
                             .createdBy(WebUtils.getCurrentUserId())
-                            .updatedAt(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime())
+                            .updatedAt(LocalDateTime.now())
                             .build()
             );
             deliveryOrder.setDeliveryStaffId(request.getDeliveryStaffId());
@@ -246,7 +247,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             StatusHistory statusHistory = StatusHistory.builder()
                     .status(request.getStatus())
                     .createdBy(userId)
-                    .updatedAt(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime())
+                    .updatedAt(LocalDateTime.now())
                     .build();
             if (request.getStatus() == OrderStatus.CANCELLED) {
                 statusHistory.setReasonCancel(request.getReasonCancel());
@@ -459,7 +460,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                 .statusHistory(com.odms.delivery.dto.event.StatusHistory.builder()
                         .status(status.getDescription())
                         .createdBy(fullName)
-                        .updatedAt(ZonedDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime())
+                        .updatedAt(LocalDateTime.now())
                         .reasonCancel(reasonCancel != null ? reasonCancel.getDescription() : null)
                         .noteCancel(noteCancel)
                         .build())
