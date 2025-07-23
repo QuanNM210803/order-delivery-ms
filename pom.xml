@@ -21,6 +21,7 @@
         <module>delivery-service</module>
         <module>tracking-service</module>
         <module>notification-service</module>
+        <module>socket-service</module>
     </modules>
 
     <properties>
@@ -36,6 +37,8 @@
         <postgresql.version>42.7.3</postgresql.version>
         <org.json>20231013</org.json>
         <jedis.version>4.3.1</jedis.version>
+        <jwt-auth-lib.version>1.0.0</jwt-auth-lib.version>
+        <netty-socketio>2.0.13</netty-socketio>
     </properties>
 
     <dependencyManagement>

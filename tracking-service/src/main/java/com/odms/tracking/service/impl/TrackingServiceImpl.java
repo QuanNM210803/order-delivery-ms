@@ -16,8 +16,9 @@ import com.odms.tracking.exception.AppException;
 import com.odms.tracking.exception.ErrorCode;
 import com.odms.tracking.service.ITrackingService;
 import com.odms.tracking.utils.WebUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,11 +35,13 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class TrackingServiceImpl implements ITrackingService {
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    @Qualifier("internal")
+    private RestTemplate restTemplate;
 
     @Value("${server.host_delivery_service}")
     private String HOST_DELIVERY_SERVICE;
@@ -57,9 +60,6 @@ public class TrackingServiceImpl implements ITrackingService {
 
     @Value("${server.port_auth_service}")
     private String AUTH_SERVICE_PORT;
-
-    @Value("${jwt.x-internal-token}")
-    private String X_INTERNAL_TOKEN;
 
     @Override
     public OrderResponse getOrderDetails(String orderCode, String phone) {
@@ -155,7 +155,6 @@ public class TrackingServiceImpl implements ITrackingService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             ParameterizedTypeReference<Response<DeliveryInfo>> typeRef =
                     new ParameterizedTypeReference<>() {};
@@ -177,7 +176,6 @@ public class TrackingServiceImpl implements ITrackingService {
     private Order getOrderInfo(String orderCode) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             ParameterizedTypeReference<Response<Order>> typeRef =
                     new ParameterizedTypeReference<>() {};
@@ -200,7 +198,6 @@ public class TrackingServiceImpl implements ITrackingService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<IdListRequest> entity = new HttpEntity<>(IdListRequest.builder()
                     .ids(ids)
                     .build(), headers);

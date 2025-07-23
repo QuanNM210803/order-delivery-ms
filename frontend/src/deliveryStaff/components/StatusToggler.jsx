@@ -5,12 +5,33 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useAuthStore } from "src/share/stores/authStore";
 import roles from "src/share/constants/roles";
+import { useSocketStore } from "src/share/stores/socketStore";
 
 export default function StatusToggler() {
   const [isVisible, setIsVisible] = useState(false);
   const [status, setStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useAuthStore((state) => state.user);
+  const connectSocket = useSocketStore((state) => state.connectSocket);
+  const socketClient = useSocketStore((state) => state.socketClient);
+
+  useEffect(() => {
+    if(!socketClient) {
+      connectSocket();
+    }
+  }, [connectSocket, socketClient]);
+
+  useEffect(() => {
+    if (!socketClient) return;
+
+    socketClient.on("updateFindOrderStatus", (data) => {
+      setStatus(data.status);
+    });
+    return () => {
+      console.log("Disconnecting socket");
+      socketClient.disconnect();
+    };
+  }, [socketClient]);
 
   const syncStatus = () => {
     setIsLoading(true);

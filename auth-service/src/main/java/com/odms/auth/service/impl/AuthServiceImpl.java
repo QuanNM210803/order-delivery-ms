@@ -3,7 +3,7 @@ package com.odms.auth.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.odms.auth.config.JwtTokenUtils;
+import com.odms.auth.config.security.JwtTokenUtils;
 import com.odms.auth.dto.TypeMail;
 import com.odms.auth.dto.event.NotificationEvent;
 import com.odms.auth.dto.request.LoginRequest;
@@ -31,6 +31,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import quannm.jwtauthlib.entity.JwtUser;
+import quannm.jwtauthlib.jwt.JwtValidator;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -48,6 +50,12 @@ public class AuthServiceImpl implements IAuthService {
 
     @Value("${frontend.url}")
     private String FRONTEND_URL;
+
+    @Value("${jwt.secretKey}")
+    private String SECRET_KEY;
+
+    @Value("${jwt.verify-email.secretKey}")
+    private String SECRET_KEY_VERIFY_EMAIL;
 
     @Override
     public LoginResponse loginAccount(LoginRequest loginRequest) {
@@ -77,7 +85,7 @@ public class AuthServiceImpl implements IAuthService {
         boolean isValid = true;
 
         try {
-            jwtTokenUtils.verifyToken(token);
+            JwtValidator.validate(token, SECRET_KEY);
         } catch (Exception e) {
             isValid = false;
         }
@@ -132,8 +140,8 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     @Transactional
     public void verifyEmail(String token) {
-        Integer userId = jwtTokenUtils.extractUserIdVerifyEmail(token);
-        User user = userRepository.findById(userId)
+        JwtUser jwtUser = JwtValidator.validate(token, SECRET_KEY_VERIFY_EMAIL);
+        User user = userRepository.findById(jwtUser.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         if (user.getIsVerified()) {

@@ -5,11 +5,13 @@ server:
   host_notification_service: ${HOST_NOTIFICATION_SERVICE:localhost}
   host_order_service: ${HOST_ORDER_SERVICE:localhost}
   host_tracking_service: ${HOST_TRACKING_SERVICE:localhost}
+  host_socket_service: ${HOST_SOCKET_SERVICE:localhost}
   port_auth_service: ${PORT_AUTH_SERVICE:8080}
   port_delivery_service: ${PORT_DELIVERY_SERVICE:8081}
   port_notification_service: ${PORT_NOTIFICATION_SERVICE:8082}
   port_order_service: ${PORT_ORDER_SERVICE:8083}
   port_tracking_service: ${PORT_TRACKING_SERVICE:8084}
+  port_socket_service: ${PORT_SOCKET_SERVICE:8085}
 
 app:
   api-prefix: /api/v1
@@ -55,17 +57,9 @@ spring:
           filters:
             - StripPrefix=2
 
-        - id: websocket-route-auth-service
-          uri: ws://${server.host_auth_service}:${server.port_auth_service}
+        - id: socket-service
+          uri: http://${server.host_socket_service}:${server.port_socket_service}
           predicates:
-            - Path=/ws/**
-
-#        - id: websocket-route-order-service
-#          uri: ws://${server.host_order_service}:${server.port_order_service}
-#          predicates:
-#            - Path=/ws/**
-#
-#        - id: websocket-route-delivery-service
-#          uri: ws://${server.host_order_service}:${server.port_order_service}
-#          predicates:
-#            - Path=/ws/**
+            - Path=${app.api-prefix}/socket/**
+          filters:
+            - StripPrefix=2

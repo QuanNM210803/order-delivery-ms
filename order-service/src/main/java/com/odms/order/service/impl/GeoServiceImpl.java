@@ -5,14 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-@RequiredArgsConstructor
 public class GeoServiceImpl implements IGeoService {
-    private final RestTemplate restTemplate = new RestTemplate();
+
+    @Autowired
+    @Qualifier("external")
+    private RestTemplate restTemplate;
 
     @Value("${api-key.open_route_service}")
     private String OPEN_ROUTE_SERVICE_API_KEY;

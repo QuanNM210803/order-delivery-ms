@@ -25,8 +25,9 @@ import com.odms.delivery.exception.ErrorCode;
 import com.odms.delivery.repository.DeliveryOrderRepository;
 import com.odms.delivery.service.IDeliveryOrderService;
 import com.odms.delivery.utils.WebUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -35,16 +36,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
-    private final DeliveryOrderRepository deliveryOrderRepository;
-    private final RestTemplate restTemplate;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private DeliveryOrderRepository deliveryOrderRepository;
+
+    @Autowired
+    @Qualifier("internal")
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Value("${server.host_order_service}")
     private String ORDER_SERVICE_HOST;
@@ -57,9 +61,6 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
 
     @Value("${server.port_auth_service}")
     private String AUTH_SERVICE_PORT;
-
-    @Value("${jwt.x-internal-token}")
-    private String X_INTERNAL_TOKEN;
 
     @Value("${frontend.url}")
     private String FRONTEND_URL;
@@ -203,6 +204,13 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             String notificationJsonDS = objectMapper.writeValueAsString(notificationEventDS);
             kafkaTemplate.send("notification-topic", notificationJsonDS);
 
+            // send socket
+            Map<String, Object> dataUpdate = new HashMap<>();
+            dataUpdate.put("status", false);
+            dataUpdate.put("userId", dsId);
+            String dataUpdateJson = objectMapper.writeValueAsString(dataUpdate);
+            kafkaTemplate.send("update-find-order-status-topic", dataUpdateJson);
+
             // send to tracking service
             this.sendMessageUpdateToTracking(request.getOrderCode(), request.getStatus(), WebUtils.getCurrentFullName(),
                     null, null, deliveryStaffId);
@@ -345,7 +353,6 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
     private OrderResponse getOrderInfo(String orderCode) {
         try{
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             ParameterizedTypeReference<Response<OrderResponse>> typeRef =
                     new ParameterizedTypeReference<>() {};
@@ -369,7 +376,6 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<IdListRequest> entity = new HttpEntity<>(IdListRequest.builder()
                     .ids(ids)
                     .build(), headers);
@@ -392,7 +398,6 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
     private Integer updateFindOrderStatus(Integer deliveryStaffId) {
         try{
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             ParameterizedTypeReference<Response<IDResponse<Integer>>> typeRef =
                     new ParameterizedTypeReference<>() {};
@@ -415,7 +420,6 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
     private Boolean checkCustomerIdMatchOrderCode(Integer customerId, String orderCode) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
             ParameterizedTypeReference<Response<Boolean>> typeRef =
                     new ParameterizedTypeReference<>() {};

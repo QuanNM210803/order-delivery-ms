@@ -90,6 +90,12 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>quannm</groupId>
+            <artifactId>jwt-auth-lib</artifactId>
+            <version>${jwt-auth-lib.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

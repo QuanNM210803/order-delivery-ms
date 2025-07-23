@@ -93,8 +93,14 @@
         </dependency>
 
         <dependency>
+            <groupId>quannm</groupId>
+            <artifactId>jwt-auth-lib</artifactId>
+            <version>${jwt-auth-lib.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
     </dependencies>

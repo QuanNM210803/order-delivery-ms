@@ -9,9 +9,7 @@ import com.odms.auth.exception.ErrorCode;
 import com.odms.auth.repository.DeliveryStaffRepository;
 import com.odms.auth.service.IDeliveryStaffService;
 import com.odms.auth.utils.WebUtils;
-import com.odms.auth.websocket.dto.UpdateFindStatusWS;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.List;
 public class DeliveryStaffServiceImpl implements IDeliveryStaffService {
 
     private final DeliveryStaffRepository deliveryStaffRepository;
-    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public Boolean getMyStatusFindingOrder() {
@@ -52,12 +49,6 @@ public class DeliveryStaffServiceImpl implements IDeliveryStaffService {
             deliveryStaff.setFindingOrder(false);
             deliveryStaffRepository.save(deliveryStaff);
 
-            // notify clients that the delivery staff has stopped finding orders
-            UpdateFindStatusWS updateFindStatusWS = UpdateFindStatusWS.builder()
-                    .userId(userId)
-                    .findingOrder(false)
-                    .build();
-            messagingTemplate.convertAndSend("/topic/update-find-order-status", updateFindStatusWS);
             return IDResponse.<Integer>builder()
                     .id(userId)
                     .build();
