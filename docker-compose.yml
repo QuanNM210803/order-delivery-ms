@@ -104,6 +104,8 @@ services:
       - postgres
       - mongodb
       - redis
+    volumes:
+      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   delivery-service:
     build:
@@ -124,6 +126,8 @@ services:
       - postgres
       - mongodb
       - redis
+    volumes:
+      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   notification-service:
     build:
@@ -141,6 +145,8 @@ services:
       - postgres
       - mongodb
       - redis
+    volumes:
+      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   order-service:
     build:
@@ -159,6 +165,8 @@ services:
       - postgres
       - mongodb
       - redis
+    volumes:
+      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   tracking-service:
     build:
@@ -180,6 +188,29 @@ services:
       - postgres
       - mongodb
       - redis
+    volumes:
+      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
+
+  socket-service:
+    build:
+      context: .
+      dockerfile: socket-service/Dockerfile
+    container_name: socket-service
+    ports:
+      - "8085:8085"
+      - "8099:8099"
+    environment:
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+      - DB_HOST=mongo
+    depends_on:
+      - kafka
+      - mysql
+      - postgres
+      - mongodb
+      - redis
+    volumes:
+      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   frontend:
     build:
