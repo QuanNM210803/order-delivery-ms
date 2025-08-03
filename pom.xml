@@ -63,6 +63,13 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/quannm210803/jwt-auth-lib</url>
+        </repository>
+    </repositories>
+
     <build>
         <pluginManagement>
             <plugins>

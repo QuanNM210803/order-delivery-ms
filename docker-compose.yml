@@ -104,8 +104,6 @@ services:
       - postgres
       - mongodb
       - redis
-    volumes:
-      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   delivery-service:
     build:
@@ -126,8 +124,6 @@ services:
       - postgres
       - mongodb
       - redis
-    volumes:
-      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   notification-service:
     build:
@@ -145,8 +141,6 @@ services:
       - postgres
       - mongodb
       - redis
-    volumes:
-      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   order-service:
     build:
@@ -165,8 +159,6 @@ services:
       - postgres
       - mongodb
       - redis
-    volumes:
-      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   tracking-service:
     build:
@@ -188,8 +180,6 @@ services:
       - postgres
       - mongodb
       - redis
-    volumes:
-      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   socket-service:
     build:
@@ -209,8 +199,6 @@ services:
       - postgres
       - mongodb
       - redis
-    volumes:
-      - C:/Users/H2 Computer/.m2/settings.xml:/root/.m2/settings.xml
 
   frontend:
     build:
