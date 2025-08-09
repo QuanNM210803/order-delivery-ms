@@ -1,24 +1,26 @@
 package com.odms.auth.service.impl;
 
-import com.odms.auth.dto.PageInfo;
-import com.odms.auth.dto.RoleName;
+import com.odms.auth.dto.UserDto;
 import com.odms.auth.dto.request.FilterUserRequest;
-import com.odms.auth.dto.response.FilterResponse;
+import com.odms.auth.dto.response.RoleResponse;
 import com.odms.auth.dto.response.UserResponse;
 import com.odms.auth.entity.Role;
 import com.odms.auth.entity.User;
+import com.odms.auth.enums.AuthErrorCode;
+import com.odms.auth.repository.RoleRepository;
 import com.odms.auth.repository.UserRepository;
 import com.odms.auth.service.IUserService;
-import com.odms.auth.utils.WebUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import nmquan.commonlib.constant.CommonConstants;
+import nmquan.commonlib.dto.response.FilterResponse;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.utils.DateUtils;
+import nmquan.commonlib.utils.PageUtils;
+import nmquan.commonlib.utils.WebUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,31 +29,38 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserResponse getCurrentUser() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        User user = WebUtils.getCurrentUser();
+        User user = userRepository.findById(WebUtils.getCurrentUserId(), false)
+                .orElseThrow(() -> new AppException(AuthErrorCode.USERNAME_NOT_EXISTS));
+        List<Role> roles = roleRepository.findAllByUserId(user.getId(), false);
         return UserResponse.builder()
-                .userId(user.getUserId())
+                .userId(user.getId())
                 .username(user.getUsername())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getAddress())
-                .roles(user.getRoles().stream()
-                        .map(Role::getName)
-                        .toList())
-                .createdAt(user.getCreatedAt().format(formatter))
+                .roles(roles.stream()
+                        .map(role -> RoleResponse.builder()
+                                .id(role.getId())
+                                .name(role.getName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .createdAt(
+                        DateUtils.instantToString_HCM(user.getCreatedAt(), CommonConstants.DATE_TIME.DD_MM_YYYY_HH_MM_SS)
+                )
                 .build();
     }
 
     @Override
-    public Map<Integer, UserResponse> getUserByIds(List<Integer> ids) {
-        List<User> users = userRepository.findAllByUserIdIn(ids);
+    public Map<Long, UserResponse> getUserByIds(List<Long> ids) {
+        List<User> users = userRepository.findAllByIdIn(ids, false);
         return users.stream()
-                .collect(Collectors.toMap(User::getUserId, user -> UserResponse.builder()
-                        .userId(user.getUserId())
+                .collect(Collectors.toMap(User::getId, user -> UserResponse.builder()
+                        .userId(user.getId())
                         .fullName(user.getFullName())
                         .email(user.getEmail())
                         .phone(user.getPhone())
@@ -60,51 +69,38 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public FilterResponse<UserResponse> filterUsers(FilterUserRequest request) {
-        int pageIndex = request.getPageIndex() != null ? request.getPageIndex() - 1 : 0;
-        int pageSize = request.getPageSize() != null ? request.getPageSize() : 10;
-
-        String username = StringUtils.isNoneBlank(request.getUsername()) ? request.getUsername().trim() : null;
-        String fullName = StringUtils.isNoneBlank(request.getFullName()) ? request.getFullName().trim().toLowerCase() : null;
-        String phone = StringUtils.isNoneBlank(request.getPhone()) ? request.getPhone().trim() : null;
-        List<String> roleNames = request.getRoleNames() != null ? request.getRoleNames()
-                .stream()
-                .map(Enum::name)
-                .collect(Collectors.toList()) : null;
-
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-
-        Page<User> userPage = userRepository.filterUsers(
-                username,
-                fullName,
-                phone,
-                roleNames,
-                pageable
+        List<UserDto> userDTOs = userRepository.filterUsers(request);
+        List<UserResponse> userResponses = new ArrayList<>(
+                userDTOs.stream()
+                .collect(Collectors.groupingBy(
+                            UserDto::getId,
+                            LinkedHashMap::new,
+                            Collectors.collectingAndThen(Collectors.toList(), list -> {
+                                UserDto userDto = list.get(0);
+                                List<RoleResponse> roles = list.stream()
+                                        .map(l -> RoleResponse.builder()
+                                                .id(l.getRoleId())
+                                                .name(l.getRoleName())
+                                                .build())
+                                        .collect(Collectors.toList());
+                                return UserResponse.builder()
+                                        .userId(userDto.getId())
+                                        .username(userDto.getUsername())
+                                        .fullName(userDto.getFullName())
+                                        .email(userDto.getEmail())
+                                        .phone(userDto.getPhone())
+                                        .address(userDto.getAddress())
+                                        .isActive(userDto.getIsActive())
+                                        .roles(roles)
+                                        .createdAt(DateUtils.instantToString_HCM(
+                                                userDto.getCreatedAt(),
+                                                CommonConstants.DATE_TIME.DD_MM_YYYY_HH_MM_SS
+                                        ))
+                                        .build();
+                            })
+                ))
+                .values()
         );
-        PageInfo pageInfo = PageInfo.builder()
-                .pageIndex(userPage.getNumber() + 1)
-                .pageSize(userPage.getSize())
-                .totalElements(userPage.getTotalElements())
-                .totalPages(userPage.getTotalPages())
-                .hasNextPage(userPage.hasNext())
-                .build();
-        List<User> users = userPage.getContent();
-        List<UserResponse> userResponses = users.stream()
-                .map(user -> UserResponse.builder()
-                        .userId(user.getUserId())
-                        .username(user.getUsername())
-                        .fullName(user.getFullName())
-                        .email(user.getEmail())
-                        .phone(user.getPhone())
-                        .address(user.getAddress())
-                        .roles(user.getRoles().stream()
-                                .map(Role::getName)
-                                .toList())
-                        .build())
-                .toList();
-        return FilterResponse.<UserResponse>builder()
-                .data(userResponses)
-                .pageInfo(pageInfo)
-                .build();
+        return PageUtils.manualPagination(userResponses, request.getPageable(), UserResponse.class);
     }
 }

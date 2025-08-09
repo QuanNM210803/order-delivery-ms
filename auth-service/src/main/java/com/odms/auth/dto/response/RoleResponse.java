@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class IDResponse<T> {
-    private T id;
+public class RoleResponse {
+    private Long id;
+    private String name;
+    private String description;
 }

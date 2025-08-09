@@ -1,84 +1,88 @@
 package com.odms.auth.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import nmquan.commonlib.model.BaseEntity;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
-@Data
+@Table(name = "user")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class User extends BaseEntity implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false, unique = true)
-    private Integer userId;
-
-    @Column(name = "username", length = 50, nullable = false)
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Column(name = "password", length = 150, nullable = false)
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "fullName", length = 100, nullable = false)
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(name = "phone", length = 10, nullable = false)
+    @Size(max = 10)
+    @NotNull
+    @Column(name = "phone", nullable = false, length = 10)
     private String phone;
 
-    @Column(name = "email", length = 150, nullable = false, unique = true)
+    @Size(max = 150)
+    @NotNull
+    @Column(name = "email", nullable = false, length = 150)
     private String email;
 
-    @Column(name = "address", length = 255)
+    @Size(max = 255)
+    @Column(name = "address")
     private String address;
 
+    @NotNull
+    @ColumnDefault("0")
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="user_roles",
-            joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "role_id")
-    )
-    private Collection<Role> roles=new HashSet<>();
-
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<Role> roles = this.getRoles();
-        if (roles == null || roles.isEmpty()) {
-            return List.of();
-        }
-        return roles.stream()
-                .map(role -> (GrantedAuthority) role::getName)
-                .toList();
+        return List.of();
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

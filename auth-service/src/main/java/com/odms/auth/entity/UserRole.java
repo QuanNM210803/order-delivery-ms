@@ -10,11 +10,11 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "delivery_staff")
+@Table(name = "user_roles")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryStaff extends BaseEntity {
+public class UserRole extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -22,6 +22,9 @@ public class DeliveryStaff extends BaseEntity {
     private User user;
 
     @NotNull
-    @Column(name = "finding_order", nullable = false)
-    private Boolean findingOrder = false;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
 }

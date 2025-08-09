@@ -3,9 +3,11 @@ package com.odms.auth.config;
 import com.odms.auth.entity.DeliveryStaff;
 import com.odms.auth.entity.Role;
 import com.odms.auth.entity.User;
+import com.odms.auth.entity.UserRole;
 import com.odms.auth.repository.DeliveryStaffRepository;
 import com.odms.auth.repository.RoleRepository;
 import com.odms.auth.repository.UserRepository;
+import com.odms.auth.repository.UserRoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Collection;
-import java.util.Collections;
-
 
 @Configuration
 @RequiredArgsConstructor
@@ -34,23 +32,24 @@ public class ApplicationInitConfig {
     @Transactional
     ApplicationRunner applicationRunner(UserRepository userRepository,
                                         RoleRepository roleRepository,
-                                        DeliveryStaffRepository deliveryStaffRepository) {
+                                        DeliveryStaffRepository deliveryStaffRepository,
+                                        UserRoleRepository userRoleRepository) {
         log.info("Initializing application.....");
         return args -> {
-            Role customerRole = roleRepository.findByName("CUSTOMER")
+            Role customerRole = roleRepository.findByName("CUSTOMER", false)
                     .orElseGet(() -> roleRepository.save(Role.builder()
                             .name("CUSTOMER")
                             .build()));
-            Role deliveryStaffRole = roleRepository.findByName("DELIVERY_STAFF")
+            Role deliveryStaffRole = roleRepository.findByName("DELIVERY_STAFF", false)
                     .orElseGet(() -> roleRepository.save(Role.builder()
                             .name("DELIVERY_STAFF")
                             .build()));
-            Role adminRole = roleRepository.findByName("ADMIN")
+            Role adminRole = roleRepository.findByName("ADMIN", false)
                     .orElseGet(() -> roleRepository.save(Role.builder()
                             .name("ADMIN")
                             .build()));
 
-            if (userRepository.findByUsername("customer").isEmpty()) {
+            if (userRepository.findByUsername("customer", false).isEmpty()) {
                 User customer = User.builder()
                         .username("customer")
                         .password(passwordEncoder.encode("123456"))
@@ -59,12 +58,15 @@ public class ApplicationInitConfig {
                         .email("nnmhqn2003@gmail.com")
                         .address("Hungyen, Vietnam")
                         .isVerified(true)
-                        .roles(Collections.singleton(customerRole))
                         .build();
                 userRepository.save(customer);
+                userRoleRepository.save(UserRole.builder()
+                        .user(customer)
+                        .role(customerRole)
+                        .build());
             }
 
-            if (userRepository.findByUsername("deliverystaff").isEmpty()) {
+            if (userRepository.findByUsername("deliverystaff", false).isEmpty()) {
                 User deliverystaff = User.builder()
                         .username("deliverystaff")
                         .password(passwordEncoder.encode("123456"))
@@ -73,7 +75,6 @@ public class ApplicationInitConfig {
                         .email("huykeo2022@gmail.com")
                         .address("Hanoi, Vietnam")
                         .isVerified(true)
-                        .roles(Collections.singleton(deliveryStaffRole))
                         .build();
                 userRepository.save(deliverystaff);
                 DeliveryStaff ds = DeliveryStaff.builder()
@@ -81,9 +82,13 @@ public class ApplicationInitConfig {
                         .findingOrder(false)
                         .build();
                 deliveryStaffRepository.save(ds);
+                userRoleRepository.save(UserRole.builder()
+                        .user(deliverystaff)
+                        .role(deliveryStaffRole)
+                        .build());
             }
 
-            if (userRepository.findByUsername("admin").isEmpty()) {
+            if (userRepository.findByUsername("admin", false).isEmpty()) {
                 User admin = User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("123456"))
@@ -92,9 +97,12 @@ public class ApplicationInitConfig {
                         .email("nnmhqn@gmail.com")
                         .address("Hanoi, Vietnam")
                         .isVerified(true)
-                        .roles(Collections.singleton(adminRole))
                         .build();
                 userRepository.save(admin);
+                userRoleRepository.save(UserRole.builder()
+                        .user(admin)
+                        .role(adminRole)
+                        .build());
             }
             log.info("Application initialization completed .....");
         };

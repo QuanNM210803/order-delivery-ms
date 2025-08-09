@@ -1,15 +1,15 @@
 package com.odms.auth.controller;
 
-import com.odms.auth.annotation.InternalApi;
 import com.odms.auth.dto.request.FilterUserRequest;
 import com.odms.auth.dto.request.internal.IdListRequest;
-import com.odms.auth.dto.response.FilterResponse;
-import com.odms.auth.dto.response.Response;
 import com.odms.auth.dto.response.UserResponse;
 import com.odms.auth.service.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import nmquan.commonlib.annotation.InternalRequest;
+import nmquan.commonlib.dto.response.FilterResponse;
+import nmquan.commonlib.dto.response.Response;
+import nmquan.commonlib.utils.ResponseUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,32 +26,20 @@ public class UserController {
     @GetMapping("/my-info")
     public ResponseEntity<Response<UserResponse>> getCurrentUser() {
         UserResponse user = userService.getCurrentUser();
-        return ResponseEntity.status(HttpStatus.OK).body(
-                Response.<UserResponse>builder()
-                        .data(user)
-                        .build()
-        );
+        return ResponseUtils.success(user);
     }
 
     @PostMapping("/internal/info/users")
-    @InternalApi
-    public ResponseEntity<Response<Map<Integer, UserResponse>>> getUserByIds(@RequestBody IdListRequest ids) {
-        Map<Integer, UserResponse> user = userService.getUserByIds(ids.getIds());
-        return ResponseEntity.status(HttpStatus.OK).body(
-                Response.<Map<Integer, UserResponse>>builder()
-                        .data(user)
-                        .build()
-        );
+    @InternalRequest
+    public ResponseEntity<Response<Map<Long, UserResponse>>> getUserByIds(@RequestBody IdListRequest ids) {
+        Map<Long, UserResponse> user = userService.getUserByIds(ids.getIds());
+        return ResponseUtils.success(user);
     }
 
     @GetMapping("/filter")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response<FilterResponse<UserResponse>>> filterUsers(@Valid @ModelAttribute FilterUserRequest request) {
         FilterResponse<UserResponse> response = userService.filterUsers(request);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                Response.<FilterResponse<UserResponse>>builder()
-                        .data(response)
-                        .build()
-        );
+        return ResponseUtils.success(response);
     }
 }

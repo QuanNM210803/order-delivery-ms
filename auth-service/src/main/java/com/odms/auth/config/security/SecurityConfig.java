@@ -1,9 +1,9 @@
 package com.odms.auth.config.security;
 
-import com.odms.auth.exception.AppException;
-import com.odms.auth.exception.ErrorCode;
+import com.odms.auth.enums.AuthErrorCode;
 import com.odms.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import nmquan.commonlib.exception.AppException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +21,9 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            return this.userRepository.findByUsername(username).orElseThrow(() ->
-                    new AppException(ErrorCode.USERNAME_NOT_EXISTS)
-            );
-        };
+        return username -> userRepository.findByUsername(username, false).orElseThrow(() ->
+                new AppException(AuthErrorCode.USERNAME_NOT_EXISTS)
+        );
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

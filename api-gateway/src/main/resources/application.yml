@@ -63,3 +63,20 @@ spring:
             - Path=${app.api-prefix}/socket/**
           filters:
             - StripPrefix=2
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: auth-service
+        url: ${app.api-prefix}/auth/v3/api-docs
+      - name: delivery-service
+        url: ${app.api-prefix}/delivery/v3/api-docs
+      - name: notification-service
+        url: ${app.api-prefix}/notification/v3/api-docs
+      - name: order-service
+        url: ${app.api-prefix}/order/v3/api-docs
+      - name: tracking-service
+        url: ${app.api-prefix}/tracking/v3/api-docs
+      - name: socket-service
+        url: ${app.api-prefix}/socket/v3/api-docs

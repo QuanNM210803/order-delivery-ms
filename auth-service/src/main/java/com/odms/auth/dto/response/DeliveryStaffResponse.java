@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeliveryStaffResponse {
-    private Integer userId;
+    private Long userId;
     private String fullName;
     private String phone;
 }

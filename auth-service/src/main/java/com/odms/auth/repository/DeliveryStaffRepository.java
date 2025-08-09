@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface DeliveryStaffRepository extends JpaRepository<DeliveryStaff, Integer> {
 
-    @Query("SELECT ds FROM DeliveryStaff ds WHERE ds.user.userId = :userId")
-    Optional<DeliveryStaff> findByUserId(Integer userId);
+    @Query("SELECT ds FROM DeliveryStaff ds WHERE ds.user.id = :userId AND ds.isDeleted = :isDeleted")
+    Optional<DeliveryStaff> findByUserId(Long userId, boolean isDeleted);
 
-    @Query("SELECT ds FROM DeliveryStaff ds WHERE ds.findingOrder = :status")
-    List<DeliveryStaff> findByFindingOrder(Boolean status);
+    @Query("SELECT ds FROM DeliveryStaff ds WHERE ds.findingOrder = :status AND ds.isDeleted = :isDeleted")
+    List<DeliveryStaff> findByFindingOrder(Boolean status, boolean isDeleted);
 }

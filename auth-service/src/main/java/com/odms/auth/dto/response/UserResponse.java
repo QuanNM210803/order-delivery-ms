@@ -14,12 +14,13 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-    private Integer userId;
+    private Long userId;
     private String username;
     private String fullName;
     private String email;
     private String phone;
     private String address;
-    private List<String> roles;
+    private Boolean isActive;
+    private List<RoleResponse> roles;
     private String createdAt;
 }

@@ -1,26 +1,28 @@
 package com.odms.auth.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import nmquan.commonlib.model.BaseEntity;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+@Getter
+@Setter
 @Entity
-@Table(name = "roles")
-@Data
+@Table(name = "role")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id", nullable = false, unique = true)
-    private Integer roleId;
-
-    @Column(name = "name", nullable = false, unique = true)
+public class Role extends BaseEntity {
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Lob
     @Column(name = "description")
     private String description;
 

@@ -1,15 +1,15 @@
 package com.odms.auth.service.impl;
 
 import com.odms.auth.dto.response.DeliveryStaffResponse;
-import com.odms.auth.dto.response.IDResponse;
 import com.odms.auth.entity.DeliveryStaff;
-import com.odms.auth.entity.User;
-import com.odms.auth.exception.AppException;
-import com.odms.auth.exception.ErrorCode;
+import com.odms.auth.enums.AuthErrorCode;
 import com.odms.auth.repository.DeliveryStaffRepository;
 import com.odms.auth.service.IDeliveryStaffService;
-import com.odms.auth.utils.WebUtils;
 import lombok.RequiredArgsConstructor;
+import nmquan.commonlib.dto.response.IDResponse;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.exception.CommonErrorCode;
+import nmquan.commonlib.utils.WebUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,34 +22,32 @@ public class DeliveryStaffServiceImpl implements IDeliveryStaffService {
 
     @Override
     public Boolean getMyStatusFindingOrder() {
-        User user = WebUtils.getCurrentUser();
-        DeliveryStaff deliveryStaff = deliveryStaffRepository.findByUserId(user.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        DeliveryStaff deliveryStaff = deliveryStaffRepository.findByUserId(WebUtils.getCurrentUserId(), false)
+                .orElseThrow(() -> new AppException(CommonErrorCode.UNAUTHENTICATED));
         return deliveryStaff.getFindingOrder();
     }
 
     @Override
-    public IDResponse<Integer> updateStatusFindingOrder(Integer userId) {
+    public IDResponse<Long> updateStatusFindingOrder(Long userId) {
         if(userId == null) {
-            User user = WebUtils.getCurrentUser();
-            DeliveryStaff deliveryStaff = deliveryStaffRepository.findByUserId(user.getUserId())
-                    .orElseThrow(() -> new AppException(ErrorCode.UPDATE_STATUS_FINDING_ORDER_FAILED));
+            DeliveryStaff deliveryStaff = deliveryStaffRepository.findByUserId(WebUtils.getCurrentUserId(), false)
+                    .orElseThrow(() -> new AppException(AuthErrorCode.UPDATE_STATUS_FINDING_ORDER_FAILED));
 
             deliveryStaff.setFindingOrder(!deliveryStaff.getFindingOrder());
             deliveryStaffRepository.save(deliveryStaff);
-            return IDResponse.<Integer>builder()
-                    .id(user.getUserId())
+            return IDResponse.<Long>builder()
+                    .id(WebUtils.getCurrentUserId())
                     .build();
         } else {
-            DeliveryStaff deliveryStaff = deliveryStaffRepository.findByUserId(userId)
-                    .orElseThrow(() -> new AppException(ErrorCode.UPDATE_STATUS_FINDING_ORDER_FAILED));
+            DeliveryStaff deliveryStaff = deliveryStaffRepository.findByUserId(userId, false)
+                    .orElseThrow(() -> new AppException(AuthErrorCode.UPDATE_STATUS_FINDING_ORDER_FAILED));
             if(!deliveryStaff.getFindingOrder()){
-                throw new AppException(ErrorCode.ERROR);
+                throw new AppException(CommonErrorCode.ERROR);
             }
             deliveryStaff.setFindingOrder(false);
             deliveryStaffRepository.save(deliveryStaff);
 
-            return IDResponse.<Integer>builder()
+            return IDResponse.<Long>builder()
                     .id(userId)
                     .build();
         }
@@ -57,9 +55,9 @@ public class DeliveryStaffServiceImpl implements IDeliveryStaffService {
 
     @Override
     public List<DeliveryStaffResponse> findDeliveryStaff(Boolean status) {
-        List<DeliveryStaff> deliveryStaffList = deliveryStaffRepository.findByFindingOrder(status);
+        List<DeliveryStaff> deliveryStaffList = deliveryStaffRepository.findByFindingOrder(status, false);
         return deliveryStaffList.stream().map(ds -> DeliveryStaffResponse.builder()
-                        .userId(ds.getUser().getUserId())
+                        .userId(ds.getUser().getId())
                         .fullName(ds.getUser().getFullName())
                         .phone(ds.getUser().getPhone())
                     .build()

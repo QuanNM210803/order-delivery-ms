@@ -4,25 +4,32 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odms.auth.config.security.JwtTokenUtils;
+import com.odms.auth.dto.RoleName;
 import com.odms.auth.dto.TypeMail;
 import com.odms.auth.dto.event.NotificationEvent;
 import com.odms.auth.dto.request.LoginRequest;
 import com.odms.auth.dto.request.RegisterRequest;
 import com.odms.auth.dto.request.VerifyRequest;
-import com.odms.auth.dto.response.IDResponse;
 import com.odms.auth.dto.response.LoginResponse;
 import com.odms.auth.dto.response.VerifyResponse;
 import com.odms.auth.entity.DeliveryStaff;
 import com.odms.auth.entity.Role;
 import com.odms.auth.entity.User;
-import com.odms.auth.exception.AppException;
-import com.odms.auth.exception.ErrorCode;
+import com.odms.auth.entity.UserRole;
+import com.odms.auth.enums.AuthErrorCode;
 import com.odms.auth.repository.DeliveryStaffRepository;
 import com.odms.auth.repository.RoleRepository;
 import com.odms.auth.repository.UserRepository;
+import com.odms.auth.repository.UserRoleRepository;
 import com.odms.auth.service.IAuthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import nmquan.commonlib.dto.response.IDResponse;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.exception.CommonErrorCode;
+import nmquan.commonlib.model.JwtUser;
+import nmquan.commonlib.utils.JwtUtils;
+import nmquan.commonlib.utils.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,10 +38,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import quannm.jwtauthlib.entity.JwtUser;
-import quannm.jwtauthlib.jwt.JwtValidator;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -43,6 +47,7 @@ public class AuthServiceImpl implements IAuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final DeliveryStaffRepository deliveryStaffRepository;
+    private final UserRoleRepository userRoleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtils jwtTokenUtils;
     private final PasswordEncoder passwordEncoder;
@@ -51,27 +56,27 @@ public class AuthServiceImpl implements IAuthService {
     @Value("${frontend.url}")
     private String FRONTEND_URL;
 
-    @Value("${jwt.secretKey}")
+    @Value("${jwt.secret-key}")
     private String SECRET_KEY;
 
-    @Value("${jwt.verify-email.secretKey}")
+    @Value("${jwt.verify-email.secret-key}")
     private String SECRET_KEY_VERIFY_EMAIL;
 
     @Override
     public LoginResponse loginAccount(LoginRequest loginRequest) {
-        Optional<User> user = userRepository.findByUsername(loginRequest.getUsername());
+        Optional<User> user = userRepository.findByUsername(loginRequest.getUsername(), false);
         if (user.isEmpty()) {
-            throw new AppException(ErrorCode.LOGIN_FAILED);
+            throw new AppException(AuthErrorCode.LOGIN_FAILED);
         }
         if(!user.get().getIsVerified()) {
-            throw new AppException(ErrorCode.USER_NOT_VERIFIED);
+            throw new AppException(AuthErrorCode.USER_NOT_VERIFIED);
         }
         try{
             Authentication authentication= authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
         } catch (BadCredentialsException ex) {
             // wrong password
-            throw new AppException(ErrorCode.LOGIN_FAILED);
+            throw new AppException(AuthErrorCode.LOGIN_FAILED);
         }
         String jwt= jwtTokenUtils.generateToken(user.get());
         return LoginResponse.builder()
@@ -85,7 +90,7 @@ public class AuthServiceImpl implements IAuthService {
         boolean isValid = true;
 
         try {
-            JwtValidator.validate(token, SECRET_KEY);
+            JwtUtils.validate(token, SECRET_KEY);
         } catch (Exception e) {
             isValid = false;
         }
@@ -97,16 +102,16 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     @Transactional
-    public IDResponse<Integer> registerAccount(RegisterRequest request, String roleName) throws JsonProcessingException {
-        userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
-            throw new AppException(ErrorCode.USERNAME_EXISTS);
+    public IDResponse<Long> registerAccount(RegisterRequest request, String roleName) throws JsonProcessingException {
+        userRepository.findByUsername(request.getUsername(), false).ifPresent(user -> {
+            throw new AppException(AuthErrorCode.USERNAME_EXISTS);
         });
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new AppException(ErrorCode.EMAIL_EXISTS);
+            throw new AppException(AuthErrorCode.EMAIL_EXISTS);
         });
 
-        Role role = roleRepository.findByName(roleName).orElseThrow(
-                () -> new AppException(ErrorCode.ERROR)
+        Role role = roleRepository.findByName(roleName, false).orElseThrow(
+                () -> new AppException(CommonErrorCode.ERROR)
         );
         User user = User.builder()
                 .username(request.getUsername())
@@ -116,9 +121,12 @@ public class AuthServiceImpl implements IAuthService {
                 .email(request.getEmail())
                 .address(request.getAddress())
                 .isVerified(false)
-                .roles(Collections.singleton(role))
                 .build();
         userRepository.save(user);
+        userRoleRepository.save(UserRole.builder()
+                        .user(user)
+                        .role(role)
+                    .build());
 
         String token = this.jwtTokenUtils.generateTokenVerifyEmail(user);
         NotificationEvent notificationEvent = NotificationEvent.builder()
@@ -127,31 +135,31 @@ public class AuthServiceImpl implements IAuthService {
                 .content("Please click the link to verify your email: " +
                         FRONTEND_URL + "/auth/verify-email/" + token)
                 .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String notificationJson = objectMapper.writeValueAsString(notificationEvent);
-        kafkaTemplate.send("notification-topic", notificationJson);
+        kafkaTemplate.send("notification-topic", ObjectMapperUtils.convertToJson(notificationEvent));
 
-        return IDResponse.<Integer>builder()
-                .id(user.getUserId())
+        return IDResponse.<Long>builder()
+                .id(user.getId())
                 .build();
     }
 
     @Override
     @Transactional
     public void verifyEmail(String token) {
-        JwtUser jwtUser = JwtValidator.validate(token, SECRET_KEY_VERIFY_EMAIL);
-        User user = userRepository.findById(jwtUser.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        JwtUser jwtUser = JwtUtils.validate(token, SECRET_KEY_VERIFY_EMAIL);
+        User user = userRepository.findByUsername(jwtUser.getUsername(), false)
+                .orElseThrow(() -> new AppException(CommonErrorCode.UNAUTHENTICATED));
 
         if (user.getIsVerified()) {
-            throw new AppException(ErrorCode.USER_ALREADY_VERIFIED);
+            throw new AppException(AuthErrorCode.USER_ALREADY_VERIFIED);
         }
 
         user.setIsVerified(true);
         userRepository.save(user);
-
-        if(user.getRoles().stream().anyMatch(role -> role.getName().equals("DELIVERY_STAFF"))) {
+        Role role = roleRepository.findByName(RoleName.DELIVERY_STAFF.name(), false)
+                .orElseThrow(() -> new AppException(CommonErrorCode.ERROR));
+        UserRole userRole = userRoleRepository.findByUserIdAndRoleId(user.getId(), role.getId(), false)
+                .orElseThrow(() -> new AppException(CommonErrorCode.ERROR));
+        if(userRole != null) {
             DeliveryStaff deliveryStaff = DeliveryStaff.builder()
                     .user(user)
                     .findingOrder(false)
