@@ -20,7 +20,7 @@ public class SocketSession {
 
     private String socketSessionId;
 
-    private Integer userId;
+    private Long userId;
 
     private Instant createdAt;
 }

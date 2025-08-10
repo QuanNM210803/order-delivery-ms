@@ -12,25 +12,25 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StatisticsDeliveryResponse {
-    private Integer orderCompleted;
-    private Integer orderCancelled;
-    private Integer orderPending;
-    private Integer orderTotal;//
+    private Long orderCompleted;
+    private Long orderCancelled;
+    private Long orderPending;
+    private Long orderTotal;//
 
     private Double shippingFeeTotal;
 
     private Double commission;//
-    private Integer ranking;
+    private Long ranking;
     private Double rankBonus;//
     private Double revenueBonus;//
     private Double earnings;//
 
     public StatisticsDeliveryResponse(
-            Integer orderCompleted,
-            Integer orderCancelled,
-            Integer orderPending,
+            Long orderCompleted,
+            Long orderCancelled,
+            Long orderPending,
             Double shippingFeeTotal,
-            Integer ranking
+            Long ranking
     ) {
         this.orderCompleted = orderCompleted;
         this.orderCancelled = orderCancelled;

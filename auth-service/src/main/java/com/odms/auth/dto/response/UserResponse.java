@@ -21,6 +21,6 @@ public class UserResponse {
     private String phone;
     private String address;
     private Boolean isActive;
-    private List<RoleResponse> roles;
+    private List<String> roles;
     private String createdAt;
 }

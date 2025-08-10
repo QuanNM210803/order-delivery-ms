@@ -1,10 +1,10 @@
 package com.odms.order.dto;
 
 public interface StatisticsDeliveryProjection {
-    Integer getDeliveryStaffId();
-    Integer getOrderCompleted();
-    Integer getOrderCancelled();
-    Integer getOrderPending();
+    Long getDeliveryStaffId();
+    Long getOrderCompleted();
+    Long getOrderCancelled();
+    Long getOrderPending();
     Double getShippingFeeTotal();
-    Integer getRanking();
+    Long getRanking();
 }

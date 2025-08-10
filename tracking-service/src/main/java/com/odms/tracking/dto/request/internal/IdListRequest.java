@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class IdListRequest {
-    private List<Integer> ids;
+    private List<Long> ids;
 }

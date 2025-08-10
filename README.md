@@ -1,3 +1,5 @@
+> The project is under development. (Interface error in some places)
+
 # ORDER AND DELIVERY MANAGEMENT SYSTEM
 
 >This is a simple order and delivery management system built using Springboot and Reactjs. It allows users to place orders, manage deliveries, and track the status of their orders.
@@ -10,11 +12,16 @@
    git clone https://github.com/QuanNM210803/order-delivery-ms.git
    ```
 
-2. **Clone this repository**
+2. **General configuration**
 
    ```bash
    In the notification-service configuration file, add your Brevo SMTP-key to be able to send mail.
    Link to get free SMTP-key: https://app.brevo.com/
+   ```
+
+   ```bash
+   The project uses a common library, source code at: https://github.com/QuanNM210803/common-lib
+   You need clone source code, push to your github package, then in the general pom.xml file, change github package path to your path. Finally you need to add a settings.xml file with your credentials to be able to download this library in docker (settings.xml same level as docker-compose.yml)
    ```
    
 3. **Run with Docker Compose**
@@ -102,4 +109,3 @@
     ![](./asset/danh-sach-nguoi-dung.jpg)
 8. `Statistics View`
    ![](./asset/thong-ke-tai-xe.jpg)
-> The project is under development. 

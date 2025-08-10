@@ -1,8 +1,5 @@
 package com.odms.order.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.odms.order.dto.PageInfo;
 import com.odms.order.dto.event.OrderCreateEvent;
 import com.odms.order.dto.event.OrderCreateEventTracking;
 import com.odms.order.dto.event.StatusHistory;
@@ -11,21 +8,23 @@ import com.odms.order.dto.request.FilterOrderAdmin;
 import com.odms.order.dto.request.FilterOrderCustomer;
 import com.odms.order.dto.request.FilterOrderDelivery;
 import com.odms.order.dto.request.OrderRequest;
-import com.odms.order.dto.response.FilterResponse;
-import com.odms.order.dto.response.IDResponse;
 import com.odms.order.dto.response.OrderFilterResponse;
 import com.odms.order.dto.response.OrderResponse;
 import com.odms.order.entity.Order;
-import com.odms.order.entity.enumerate.OrderStatus;
-import com.odms.order.exception.AppException;
-import com.odms.order.exception.ErrorCode;
+import com.odms.order.enums.OrderErrorCode;
+import com.odms.order.enums.OrderStatus;
 import com.odms.order.repository.OrderRepository;
 import com.odms.order.service.IGeoService;
 import com.odms.order.service.IOrderService;
 import com.odms.order.service.IShippingFeeService;
-import com.odms.order.utils.WebUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import nmquan.commonlib.dto.PageInfo;
+import nmquan.commonlib.dto.response.FilterResponse;
+import nmquan.commonlib.dto.response.IDResponse;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.utils.ObjectMapperUtils;
+import nmquan.commonlib.utils.WebUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +55,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public IDResponse<String> createOrder(OrderRequest orderRequest) {
         String orderCode = this.generateOrderCode();
-        Integer customerId = WebUtils.getCurrentUserId();
+        Long customerId = WebUtils.getCurrentUserId();
         Double weight = orderRequest.getWeight()*1000; // Convert kg to grams
         Double distance = geoService.getDistance(orderRequest.getPickupAddress(), orderRequest.getDeliveryAddress());
         Double shippingFee = shippingFeeService.calculateShippingFee(distance, weight);
@@ -74,7 +74,7 @@ public class OrderServiceImpl implements IOrderService {
                 .price(orderRequest.getPrice())
                 .distance(distance)
                 .shippingFee(shippingFee)
-                .orderStatus(OrderStatus.CREATED)
+                .orderStatus(OrderStatus.CREATED.name())
                 .senderName(WebUtils.getCurrentFullName())
                 .build();
         orderRepository.save(order);
@@ -88,13 +88,11 @@ public class OrderServiceImpl implements IOrderService {
                 .createdAt(order.getCreatedAt())
                 .createdBy(customerId)
                 .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String orderCreateEventJson = objectMapper.writeValueAsString(orderCreateEvent);
+        String orderCreateEventJson = ObjectMapperUtils.convertToJson(orderCreateEvent);
         kafkaTemplate.send("order-create-topic", orderCreateEventJson);
 
         //SEND TO TRACKING SERVICE
-        String phone = WebUtils.getCurrentPhone();
+        String phone = com.odms.order.utils.WebUtils.getCurrentPhone();
         OrderCreateEventTracking orderCreateEventTracking = OrderCreateEventTracking.builder()
                 .orderCode(order.getOrderCode())
                 .senderName(fullName)
@@ -117,7 +115,7 @@ public class OrderServiceImpl implements IOrderService {
                         .build()))
                 .customerId(customerId)
                 .build();
-        String orderCreateEventTrackingJson = objectMapper.writeValueAsString(orderCreateEventTracking);
+        String orderCreateEventTrackingJson = ObjectMapperUtils.convertToJson(orderCreateEventTracking);
         kafkaTemplate.send("order-create-tracking-topic", orderCreateEventTrackingJson);
 
         return IDResponse.<String>builder()
@@ -126,16 +124,16 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public boolean checkCustomerId(Integer customerId, String orderCode) {
-        Optional<Order> order = orderRepository.findByOrderCode(orderCode);
+    public boolean checkCustomerId(Long customerId, String orderCode) {
+        Optional<Order> order = orderRepository.findByOrderCode(orderCode, false);
         return order.map(value -> value.getCustomerId().equals(customerId)).orElse(false);
     }
 
     @Override
     public OrderResponse getOrderByOrderCode(String orderCode) {
-        Optional<Order> orderOptional = orderRepository.findByOrderCode(orderCode);
+        Optional<Order> orderOptional = orderRepository.findByOrderCode(orderCode, false);
         if(orderOptional.isEmpty()){
-            throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+            throw new AppException(OrderErrorCode.ORDER_NOT_FOUND);
         }
         Order order = orderOptional.get();
         return OrderResponse.builder()
@@ -157,12 +155,12 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void updateStatusDelivery(UpdateDeliveryStatusEvent request) {
-        Optional<Order> orderOptional = orderRepository.findByOrderCode(request.getOrderCode());
+        Optional<Order> orderOptional = orderRepository.findByOrderCode(request.getOrderCode(), false);
         if(orderOptional.isEmpty()){
-            throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+            throw new AppException(OrderErrorCode.ORDER_NOT_FOUND);
         }
         Order order = orderOptional.get();
-        order.setOrderStatus(request.getStatus());
+        order.setOrderStatus(request.getStatus().name());
         if(request.getStatus() == OrderStatus.ASSIGNED) {
             order.setDeliveryStaffId(request.getDeliveryStaffId());
         }
@@ -174,7 +172,7 @@ public class OrderServiceImpl implements IOrderService {
         int pageIndex = request.getPageIndex() != null ? request.getPageIndex() - 1 : 0;
         int pageSize = request.getPageSize() != null ? request.getPageSize() : 10;
 
-        Integer customerId = WebUtils.getCurrentUserId();
+        Long customerId = WebUtils.getCurrentUserId();
         String orderCode = StringUtils.isNoneBlank(request.getOrderCode()) ? request.getOrderCode().trim() : null;
         String receiverName = StringUtils.isNoneBlank(request.getReceiverName()) ? request.getReceiverName().trim().toLowerCase() : null;
         String receiverPhone = StringUtils.isNoneBlank(request.getReceiverPhone()) ? request.getReceiverPhone().trim() : null;
@@ -194,6 +192,7 @@ public class OrderServiceImpl implements IOrderService {
                 orderStatuses,
                 startDate,
                 endDate,
+                false,
                 pageable
         );
         PageInfo pageInfo = PageInfo.builder()
@@ -205,15 +204,18 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
         List<Order> orders = orderPage.getContent();
         List<OrderFilterResponse> orderFilterResponses = orders.stream()
-                .map(order -> OrderFilterResponse.builder()
-                        .orderCode(order.getOrderCode())
-                        .receiverName(order.getReceiverName())
-                        .receiverPhone(order.getReceiverPhone())
-                        .deliveryAddress(order.getDeliveryAddress())
-                        .description(order.getDescription())
-                        .shippingFee(formatCurrency(order.getShippingFee()))
-                        .orderStatus(order.getOrderStatus().getDescription())
-                        .build())
+                .map(order -> {
+                    OrderStatus orderStatus = OrderStatus.getByName(order.getOrderStatus());
+                    return OrderFilterResponse.builder()
+                            .orderCode(order.getOrderCode())
+                            .receiverName(order.getReceiverName())
+                            .receiverPhone(order.getReceiverPhone())
+                            .deliveryAddress(order.getDeliveryAddress())
+                            .description(order.getDescription())
+                            .shippingFee(formatCurrency(order.getShippingFee()))
+                            .orderStatus(orderStatus != null ? orderStatus.getDescription() : null)
+                            .build();
+                })
                 .toList();
         return FilterResponse.<OrderFilterResponse>builder()
                 .data(orderFilterResponses)
@@ -226,17 +228,21 @@ public class OrderServiceImpl implements IOrderService {
         int pageIndex = request.getPageIndex() != null ? request.getPageIndex() - 1 : 0;
         int pageSize = request.getPageSize() != null ? request.getPageSize() : 10;
 
-        Integer deliveryStaffId = WebUtils.getCurrentUserId();
+        Long deliveryStaffId = WebUtils.getCurrentUserId();
         String orderCode = StringUtils.isNoneBlank(request.getOrderCode()) ? request.getOrderCode().trim() : null;
         String senderName = StringUtils.isNoneBlank(request.getSenderName()) ? request.getSenderName().trim().toLowerCase() : null;
         String description = StringUtils.isNoneBlank(request.getDescription()) ? request.getDescription().trim().toLowerCase() : null;
 
-        List<OrderStatus> orderStatuses = null;
+        List<String> orderStatuses = null;
         OrderStatus status = request.getStatus();
         if(status == OrderStatus.COMPLETED || status == OrderStatus.CANCELLED) {
-            orderStatuses = List.of(status);
+            orderStatuses = Stream.of(status)
+                                .map(OrderStatus::name)
+                        .toList();
         } else {
-            orderStatuses = List.of(OrderStatus.ASSIGNED, OrderStatus.PICKED_UP, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED);
+            orderStatuses = Stream.of(OrderStatus.ASSIGNED, OrderStatus.PICKED_UP, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED)
+                    .map(OrderStatus::name)
+                    .toList();
         }
 
         LocalDateTime startDate = request.getStartDate()!=null ? request.getStartDate().atStartOfDay() : null;
@@ -253,6 +259,7 @@ public class OrderServiceImpl implements IOrderService {
                 orderStatuses,
                 startDate,
                 endDate,
+                false,
                 pageable
         );
         PageInfo pageInfo = PageInfo.builder()
@@ -264,14 +271,17 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
         List<Order> orders = orderPage.getContent();
         List<OrderFilterResponse> orderFilterResponses = orders.stream()
-                .map(order -> OrderFilterResponse.builder()
-                        .orderCode(order.getOrderCode())
-                        .senderName(order.getSenderName())
-                        .pickupAddress(order.getPickupAddress())
-                        .deliveryAddress(order.getDeliveryAddress())
-                        .description(order.getDescription())
-                        .orderStatus(order.getOrderStatus().getDescription())
-                        .build())
+                .map(order -> {
+                    OrderStatus orderStatus = OrderStatus.getByName(order.getOrderStatus());
+                    return OrderFilterResponse.builder()
+                            .orderCode(order.getOrderCode())
+                            .senderName(order.getSenderName())
+                            .pickupAddress(order.getPickupAddress())
+                            .deliveryAddress(order.getDeliveryAddress())
+                            .description(order.getDescription())
+                            .orderStatus(orderStatus != null ? orderStatus.getDescription() : null)
+                            .build();
+                })
                 .toList();
         return FilterResponse.<OrderFilterResponse>builder()
                 .data(orderFilterResponses)
@@ -302,6 +312,7 @@ public class OrderServiceImpl implements IOrderService {
                 orderStatuses,
                 startDate,
                 endDate,
+                false,
                 pageable
         );
         PageInfo pageInfo = PageInfo.builder()
@@ -313,14 +324,17 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
         List<Order> orders = orderPage.getContent();
         List<OrderFilterResponse> orderFilterResponses = orders.stream()
-                .map(order -> OrderFilterResponse.builder()
-                        .orderCode(order.getOrderCode())
-                        .senderName(order.getSenderName())
-                        .pickupAddress(order.getPickupAddress())
-                        .deliveryAddress(order.getDeliveryAddress())
-                        .description(order.getDescription())
-                        .orderStatus(order.getOrderStatus().getDescription())
-                        .build())
+                .map(order -> {
+                    OrderStatus orderStatus = OrderStatus.getByName(order.getOrderStatus());
+                    return OrderFilterResponse.builder()
+                            .orderCode(order.getOrderCode())
+                            .senderName(order.getSenderName())
+                            .pickupAddress(order.getPickupAddress())
+                            .deliveryAddress(order.getDeliveryAddress())
+                            .description(order.getDescription())
+                            .orderStatus(orderStatus != null ? orderStatus.getDescription() : null)
+                            .build();
+                })
                 .toList();
         return FilterResponse.<OrderFilterResponse>builder()
                 .data(orderFilterResponses)

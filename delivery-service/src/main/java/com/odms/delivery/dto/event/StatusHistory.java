@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class StatusHistory {
     private String status;
     private String createdBy;
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     // for cancel status
     private String reasonCancel;

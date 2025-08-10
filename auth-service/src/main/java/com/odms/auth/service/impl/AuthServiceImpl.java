@@ -1,11 +1,9 @@
 package com.odms.auth.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odms.auth.config.security.JwtTokenUtils;
-import com.odms.auth.dto.RoleName;
-import com.odms.auth.dto.TypeMail;
+import com.odms.auth.enums.RoleName;
+import com.odms.auth.enums.TypeMail;
 import com.odms.auth.dto.event.NotificationEvent;
 import com.odms.auth.dto.request.LoginRequest;
 import com.odms.auth.dto.request.RegisterRequest;
@@ -30,6 +28,7 @@ import nmquan.commonlib.exception.CommonErrorCode;
 import nmquan.commonlib.model.JwtUser;
 import nmquan.commonlib.utils.JwtUtils;
 import nmquan.commonlib.utils.ObjectMapperUtils;
+import nmquan.commonlib.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;

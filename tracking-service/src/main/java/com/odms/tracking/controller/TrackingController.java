@@ -1,11 +1,11 @@
 package com.odms.tracking.controller;
 
 import com.odms.tracking.dto.response.OrderResponse;
-import com.odms.tracking.dto.response.Response;
 import com.odms.tracking.service.ITrackingService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import nmquan.commonlib.dto.response.Response;
+import nmquan.commonlib.utils.ResponseUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,18 +22,14 @@ public class TrackingController {
     // Authorization is handled by the service layer
     public ResponseEntity<Response<OrderResponse>> getOrderDetails(@RequestParam @NotBlank String orderCode) {
         OrderResponse order = trackingService.getOrderDetails(orderCode, null);
-        return ResponseEntity.status(HttpStatus.OK).body(Response.<OrderResponse>builder()
-                        .data(order)
-                .build());
+        return ResponseUtils.success(order);
     }
 
     @GetMapping("/public/order/details")
     public ResponseEntity<Response<OrderResponse>> getPublicOrderDetails(@RequestParam @NotBlank String orderCode,
                                                                          @RequestParam @NotBlank String phone) {
         OrderResponse order = trackingService.getOrderDetails(orderCode, phone);
-        return ResponseEntity.status(HttpStatus.OK).body(Response.<OrderResponse>builder()
-                .data(order)
-                .build());
+        return ResponseUtils.success(order);
     }
 
 

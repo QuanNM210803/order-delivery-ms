@@ -29,7 +29,7 @@ export default function AdminUserList() {
 
   const handlePageSizeChange = (size) => {
     setPageSize(size);
-    setPage(1);
+    setPage(0);
   };
 
   const handlePageChange = (page) => {
@@ -225,7 +225,7 @@ export default function AdminUserList() {
         )}
         <div className="self-end">
           <Pagination
-            page={page}
+            page={page+1}
             pageSize={pageSize}
             total={totalRecords}
             handlePageChange={(page) => handlePageChange(page)}

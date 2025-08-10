@@ -2,6 +2,8 @@ package com.odms.order.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nmquan.commonlib.security.AuthEntryPoint;
+import nmquan.commonlib.security.TokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,8 +22,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Slf4j
 public class WebSecurityConfig {
 
-    private final JwtAuthEntryPoint jwtAuthEntryPoint;
-    private final JwtTokenFilter jwtTokenFilter;
+    private final AuthEntryPoint jwtAuthEntryPoint;
+    private final TokenFilter jwtTokenFilter;
 
     private static final String[] PUBLIC_URLS = {
             "/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html",

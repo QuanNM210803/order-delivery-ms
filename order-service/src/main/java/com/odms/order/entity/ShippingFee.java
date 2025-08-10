@@ -1,35 +1,37 @@
 package com.odms.order.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import nmquan.commonlib.model.BaseEntity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "shipping_fees", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"distance_range_id", "weight_range_id"})
-})
+@Table(name = "shipping_fee")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Builder
-public class ShippingFee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
+public class ShippingFee extends BaseEntity {
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "distance_range_id", nullable = false)
     private DistanceRange distanceRange;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "weight_range_id", nullable = false)
-    private WeightRange weightRange;
+    private com.odms.order.entity.WeightRange weightRange;
 
+    @NotNull
     @Column(name = "from_price", nullable = false)
     private Double fromPrice;
 
     @Column(name = "to_price")
     private Double toPrice;
+
 }

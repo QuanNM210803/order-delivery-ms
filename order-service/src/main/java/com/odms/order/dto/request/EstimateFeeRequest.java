@@ -1,5 +1,6 @@
 package com.odms.order.dto.request;
 
+import com.odms.order.constant.Message;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,12 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EstimateFeeRequest {
-    @NotBlank(message = "Yêu cầu nhập địa chỉ lấy hàng")
+    @NotBlank(message = Message.ESTIMATE_PICKUP_ADDRESS_REQUIRE)
     String pickupAddress;
 
-    @NotBlank(message = "Yêu cầu nhập địa chỉ giao hàng")
+    @NotBlank(message = Message.ESTIMATE_DELIVERY_ADDRESS_REQUIRE)
     String deliveryAddress;
 
-    @NotNull(message = "Yêu cầu khối lượng hàng hóa")
+    @NotNull(message = Message.ESTIMATE_WEIGHT_REQUIRE)
     Double weight; // kg
 }

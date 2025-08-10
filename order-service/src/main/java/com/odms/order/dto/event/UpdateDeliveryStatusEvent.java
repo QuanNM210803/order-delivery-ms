@@ -1,6 +1,6 @@
 package com.odms.order.dto.event;
 
-import com.odms.order.entity.enumerate.OrderStatus;
+import com.odms.order.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +15,6 @@ public class UpdateDeliveryStatusEvent {
     private OrderStatus status;
 
     // for update status = ASSIGNED
-    private Integer deliveryStaffId;
+    private Long deliveryStaffId;
 
 }

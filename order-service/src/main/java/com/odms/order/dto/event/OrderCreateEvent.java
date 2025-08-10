@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class OrderCreateEvent {
     private String id;
     private String orderCode;
-    private Integer deliveryStaffId;
+    private Long deliveryStaffId;
 
-    private LocalDateTime createdAt;
-    private Integer createdBy;
+    private Instant createdAt;
+    private Long createdBy;
 }

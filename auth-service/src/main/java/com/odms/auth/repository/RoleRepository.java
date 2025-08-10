@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Integer> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query("SELECT r FROM Role r " +
             "WHERE r.name = :name AND r.isDeleted = :isDeleted")
     Optional<Role> findByName(String name, boolean isDeleted);

@@ -5,64 +5,181 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e793ef6b-6701-468c-8e27-0e03802d021b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/constant/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/UserDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/RoleResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/UserRole.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/UserRoleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IUserRoleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/UserRoleServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/resources/i18n/messages_en.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/auth-service/src/main/resources/i18n/messages_vi.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/delivery-service/src/main/resources/i18n/messages_en.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/delivery-service/src/main/resources/i18n/messages_vi.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/config/security/WebSecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/constant/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/enums/OrderErrorCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/resources/i18n/messages_en.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/resources/i18n/messages_vi.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/order-service.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/SocketServiceApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/config/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/AuthServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/AuthServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/annotation/InternalApi.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/annotation/InternalApiAspect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/ApplicationInitConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/OpenApiConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/RestTemplateConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/JwtAuthEntryPoint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/JwtTokenFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/JwtTokenUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/JwtTokenUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/config/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/constant/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/constant/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/DeliveryStaffController.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/DeliveryStaffController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/PageInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/FilterUserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/FilterUserRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/PageRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/internal/IdListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/internal/IdListRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/DeliveryStaffResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/DeliveryStaffResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/FilterResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/IDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/RoleName.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/enums/RoleName.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/TypeMail.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/enums/TypeMail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/event/NotificationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/event/NotificationEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/request/RegisterRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/dto/response/UserResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/BaseEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/DeliveryStaff.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/DeliveryStaff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/exception/ApiExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/exception/AppException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/enums/AuthErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/DeliveryStaffRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/DeliveryStaffRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/RoleRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IAuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IAuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IDeliveryStaffService.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IDeliveryStaffService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/IUserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/AuthServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/DeliveryStaffServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/DeliveryStaffServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/utils/Message.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/src/main/java/com/odms/auth/utils/WebUtils.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/auth-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/resources/i18n/messages_en.properties" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/i18n/messages_en.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/src/main/resources/i18n/messages_vi.properties" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/i18n/messages_vi.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/DeliveryServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/DeliveryServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/annotation/InternalApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/annotation/InternalApiAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/config/OpenApiConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/config/RestTemplateConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/config/security/JwtAuthEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/config/security/JwtTokenFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/config/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/config/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/controller/DeliveryOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/controller/DeliveryOrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/controller/ListenEventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/controller/ListenEventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/document/DeliveryOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/document/DeliveryOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/document/StatusHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/document/StatusHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/document/enumerate/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/enums/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/document/enumerate/ReasonCancel.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/enums/ReasonCancel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/TypeMail.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/enums/TypeMail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/UserInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/NotificationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/NotificationEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/OrderCreateEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/OrderCreateEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/StatusHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/StatusHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/UpdateDeliveryStatusEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/UpdateDeliveryStatusEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/UpdateDeliveryStatusToOrderEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/event/UpdateDeliveryStatusToOrderEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/request/UpdateDeliveryStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/request/UpdateDeliveryStatusRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/request/internal/IdListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/request/internal/IdListRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/IDResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/internal/DeliveryInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/internal/DeliveryInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/internal/OrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/internal/OrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/internal/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/dto/response/internal/UserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/exception/ApiExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/exception/AppException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/enums/DeliveryErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/service/IDeliveryOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/service/IDeliveryOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/service/impl/DeliveryOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/service/impl/DeliveryOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/utils/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/constant/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/java/com/odms/delivery/utils/WebUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/delivery-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/admin/views/AdminUserList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/admin/views/AdminUserList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/NotificationServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/NotificationServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/controller/EmailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/dto/TypeMail.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/enums/TypeMail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/dto/event/NotificationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/dto/event/NotificationEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/dto/response/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/exception/ApiExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/exception/AppException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/exception/ErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/odms/notification/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/OrderServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/annotation/InternalApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/annotation/InternalApiAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/OpenApiConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/RestTemplateConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/security/JwtAuthEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/security/JwtTokenFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/config/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/ListenEventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/ListenEventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/ShippingFeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/ShippingFeeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/StatisticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/controller/StatisticsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/DistanceHeaderDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/DistanceHeaderDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/PageInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/StatisticsDeliveryProjection.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/StatisticsDeliveryProjection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/UserInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/WeightRangeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/WeightRangeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/WeightRowDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/WeightRowDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/OrderCreateEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/OrderCreateEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/OrderCreateEventTracking.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/OrderCreateEventTracking.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/StatusHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/StatusHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/UpdateDeliveryStatusEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/event/UpdateDeliveryStatusEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/EstimateFeeRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/EstimateFeeRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/FilterOrderAdmin.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/FilterOrderAdmin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/FilterOrderCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/FilterOrderCustomer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/FilterOrderDelivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/FilterOrderDelivery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/OrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/OrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/request/PageRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/FilterResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/IDResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/OrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/OrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/StatisticsDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/dto/response/StatisticsDeliveryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/BaseEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/DistanceRange.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/DistanceRange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/ShippingFee.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/ShippingFee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/WeightRange.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/WeightRange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/entity/enumerate/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/enums/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/exception/ApiExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/exception/AppException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/exception/ErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/DistanceRangeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/DistanceRangeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/ShippingFeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/ShippingFeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/WeightRangeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/repository/WeightRangeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/IOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/IOrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/ShippingFeeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/ShippingFeeServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/StatisticsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/service/impl/StatisticsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/utils/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/utils/WebUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/com/odms/order/utils/WebUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/auth-service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/auth-service.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/SocketApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/controller/ListenEventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/controller/ListenEventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/controller/SocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/controller/SocketHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/dto/response/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/entity/SocketSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/entity/SocketSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/exception/ApiExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/exception/AppException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/exception/ErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/repository/SocketSessionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/repository/SocketSessionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/service/ISocketSessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/service/ISocketSessionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/service/impl/SocketSessionServiceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/java/com/odms/socket/service/impl/SocketSessionServiceServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/socket-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/socket-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/TrackingServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/TrackingServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/config/OpenApiConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/config/RestTemplateConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/config/security/JwtAuthEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/config/security/JwtTokenFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/config/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/config/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/controller/TrackingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/controller/TrackingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/UserInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/event/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/event/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/event/StatusHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/event/StatusHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/event/UpdateDeliveryStatusEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/event/UpdateDeliveryStatusEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/request/internal/IdListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/request/internal/IdListRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/response/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/response/internal/DeliveryInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/response/internal/DeliveryInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/response/internal/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/dto/response/internal/UserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/exception/ApiExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/exception/AppException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/exception/ErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/service/impl/TrackingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/service/impl/TrackingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/utils/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/java/com/odms/tracking/utils/WebUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tracking-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tracking-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,11 +189,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Dockerfile" />
-        <option value="com.intellij.jpb.JpaEntity" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
+        <option value="com.intellij.jpb.JpaEntity" />
       </list>
     </option>
   </component>
@@ -89,6 +206,31 @@
     &quot;assignee&quot;: &quot;QuanNM210803&quot;
   }
 }</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="draft" />
+                    <option name="lastUsedInstant" value="1754726923" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1754726922" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/QuanNM210803/order-delivery-ms.git&quot;,
@@ -110,71 +252,77 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Test.executor": "Run",
-    "Application.test.executor": "Run",
-    "Maven.api-gateway [clean].executor": "Run",
-    "Maven.auth-service [clean].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Notification.DisplayName-DoNotAsk-Database detector": "Database detector",
-    "Notification.DoNotAsk-Database detector": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.ApiGatewayApplication.executor": "Debug",
-    "Spring Boot.AuthServiceApplication.executor": "Debug",
-    "Spring Boot.DeliveryServiceApplication.executor": "Debug",
-    "Spring Boot.NotificationServiceApplication.executor": "Debug",
-    "Spring Boot.OrderServiceApplication.executor": "Debug",
-    "Spring Boot.TrackingServiceApplication.executor": "Debug",
-    "WebServerToolWindowFactoryState": "false",
-    "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Project/order-delivery-ms",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "spring.configuration.checksum": "9a44f10565cd9daa37979b0f5db8b951",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Test.executor&quot;: &quot;Run&quot;,
+    &quot;Application.test.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.api-gateway [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.auth-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.auth-service [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.odms [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.odms [install].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Database detector&quot;: &quot;Database detector&quot;,
+    &quot;Notification.DoNotAsk-Database detector&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.AuthServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.DeliveryServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.NotificationServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.OrderServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.SocketApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.SocketServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.TrackingServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;draft&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/MyApp/driver/postgresql-42.7.3.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;9a44f10565cd9daa37979b0f5db8b951&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;,
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Project\order-delivery-ms\notification-service\src\main\java\com\odms\notification" />
       <recent name="D:\Project\order-delivery-ms\delivery-service\src\main\java\com\odms\delivery" />
       <recent name="D:\Project\order-delivery-ms\order-service\src\main\java\com\odms\order" />
       <recent name="D:\Project\order-delivery-ms\tracking-service\src\main\java\com\odms\tracking" />
       <recent name="D:\Project\order-delivery-ms\tracking-service\src\main\java\com\odms\tracking\dto\request" />
-      <recent name="D:\Project\order-delivery-ms\order-service\src\main\java\com\odms\order\entity" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.odms.socket.config.security" />
       <recent name="com.odms.auth.config" />
       <recent name="com.odms.auth.dto.request" />
       <recent name="com.odms.auth.dto" />
       <recent name="com.odms.auth.dto.response" />
-      <recent name="com.odms.order.dto.response" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -187,7 +335,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunManager" selected="Spring Boot.AuthServiceApplication">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="tracking-service" />
       <method v="2">
@@ -234,9 +382,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SocketApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="SocketServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="socket-service" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.odms.socket.SocketApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.odms.socket.SocketServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -252,8 +400,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
       </set>
     </attachedChunks>
   </component>
@@ -314,6 +462,12 @@
       <workItem from="1754626627118" duration="738000" />
       <workItem from="1754627413851" duration="345000" />
       <workItem from="1754627993980" duration="7700000" />
+      <workItem from="1754727255294" duration="1174000" />
+      <workItem from="1754728456675" duration="1451000" />
+      <workItem from="1754729963390" duration="8117000" />
+      <workItem from="1754744744462" duration="10758000" />
+      <workItem from="1754756492043" duration="4048000" />
+      <workItem from="1754792931874" duration="16043000" />
     </task>
     <servers />
   </component>

@@ -1,5 +1,6 @@
 package com.odms.order.dto.request;
 
+import com.odms.order.constant.Message;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,29 +14,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderRequest {
 
-    @NotBlank(message = "Tên người nhận không được để trống")
+    @NotBlank(message = Message.ORDER_RECEIVER_NAME_REQUIRE)
     private String receiverName;
 
-    @NotBlank(message = "Số điện thoại người nhận không được để trống")
+    @NotBlank(message = Message.ORDER_RECEIVER_PHONE_REQUIRE)
     private String receiverPhone;
 
-    @NotBlank(message = "Địa chỉ giao hàng không được để trống")
+    @NotBlank(message = Message.ORDER_DELIVERY_ADDRESS_REQUIRE)
     private String deliveryAddress;
 
-    @NotBlank(message = "Địa chỉ lấy hàng không được để trống")
+    @NotBlank(message = Message.ORDER_PICKUP_ADDRESS_REQUIRE)
     private String pickupAddress;
 
-    @NotBlank(message = "Mô tả đơn hàng không được để trống")
+    @NotBlank(message = Message.ORDER_DESCRIPTION_REQUIRE)
     private String description;
 
     private String size;
 
-    @NotNull(message = "Cân nặng đơn hàng không được để trống")
+    @NotNull(message = Message.ORDER_WEIGHT_REQUIRE)
     private Double weight;
 
     private String note;
 
-    @NotNull(message = "Giá đơn hàng không được để trống")
+    @NotNull(message = Message.ORDER_PRICE_REQUIRE)
     private Double price;
 
 }

@@ -15,6 +15,6 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeliveryInfo {
-    private Integer deliveryStaffId;
+    private Long deliveryStaffId;
     private List<StatusHistory> statusHistory;
 }

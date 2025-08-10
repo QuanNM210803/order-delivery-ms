@@ -2,7 +2,7 @@ package com.odms.auth.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.odms.auth.constant.Message;
-import com.odms.auth.dto.RoleName;
+import com.odms.auth.enums.RoleName;
 import com.odms.auth.dto.request.LoginRequest;
 import com.odms.auth.dto.request.RegisterRequest;
 import com.odms.auth.dto.request.VerifyRequest;

@@ -5,14 +5,14 @@ import com.odms.order.dto.request.FilterOrderAdmin;
 import com.odms.order.dto.request.FilterOrderCustomer;
 import com.odms.order.dto.request.FilterOrderDelivery;
 import com.odms.order.dto.request.OrderRequest;
-import com.odms.order.dto.response.FilterResponse;
-import com.odms.order.dto.response.IDResponse;
 import com.odms.order.dto.response.OrderFilterResponse;
 import com.odms.order.dto.response.OrderResponse;
+import nmquan.commonlib.dto.response.FilterResponse;
+import nmquan.commonlib.dto.response.IDResponse;
 
 public interface IOrderService {
     IDResponse<String> createOrder(OrderRequest orderRequest);
-    boolean checkCustomerId(Integer customerId, String orderCode);
+    boolean checkCustomerId(Long customerId, String orderCode);
     OrderResponse getOrderByOrderCode(String orderCode);
     void updateStatusDelivery(UpdateDeliveryStatusEvent request);
 
