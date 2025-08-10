@@ -45,6 +45,18 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>nmquan</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>${common-lib.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -46,7 +46,6 @@ public class DeliveryStaffServiceImpl implements IDeliveryStaffService {
             }
             deliveryStaff.setFindingOrder(false);
             deliveryStaffRepository.save(deliveryStaff);
-
             return IDResponse.<Long>builder()
                     .id(userId)
                     .build();

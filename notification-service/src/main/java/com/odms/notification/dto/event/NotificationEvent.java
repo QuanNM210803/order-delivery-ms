@@ -1,6 +1,6 @@
 package com.odms.notification.dto.event;
 
-import com.odms.notification.dto.TypeMail;
+import com.odms.notification.enums.TypeMail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

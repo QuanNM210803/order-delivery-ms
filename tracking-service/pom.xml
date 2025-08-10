@@ -92,9 +92,15 @@
         </dependency>
 
         <dependency>
-            <groupId>quannm</groupId>
-            <artifactId>jwt-auth-lib</artifactId>
-            <version>${jwt-auth-lib.version}</version>
+            <groupId>nmquan</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>${common-lib.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

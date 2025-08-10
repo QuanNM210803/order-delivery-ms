@@ -1,11 +1,9 @@
 package com.odms.notification.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.odms.notification.dto.TypeMail;
+import com.odms.notification.enums.TypeMail;
 import com.odms.notification.dto.event.NotificationEvent;
 import lombok.RequiredArgsConstructor;
+import nmquan.commonlib.utils.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,8 +17,8 @@ public class EmailService {
     @Value("${spring.mail.sender}")
     private String SENDER;
 
-    public void handleSendEmail(String notificationJson) throws JsonProcessingException {
-        NotificationEvent notificationEvent = this.getNotificationEvent(notificationJson);
+    public void handleSendEmail(String notificationJson) {
+        NotificationEvent notificationEvent = ObjectMapperUtils.convertToObject(notificationJson, NotificationEvent.class);
 
         String recipient = notificationEvent.getRecipient();
         String subject = this.getSubject(notificationEvent.getTypeMail());
@@ -65,12 +63,6 @@ public class EmailService {
             default:
                 return "[ODMS] Notification";
         }
-    }
-
-    private NotificationEvent getNotificationEvent(String notificationJson) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper.readValue(notificationJson, NotificationEvent.class);
     }
 
     private void sendEmail(String to, String subject, String body) {

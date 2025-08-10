@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DistanceHeaderDTO {
-    private Integer id;
+    private Long id;
     private Double fromM;
     private Double toM;
     private String label;

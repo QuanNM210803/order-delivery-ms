@@ -1,6 +1,19 @@
 spring:
   application:
     name: tracking-service
+  datasource:
+    url: jdbc:h2:mem:tracking-service
+    username: root
+    password: root
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   kafka:
     consumer:
       bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9094}
@@ -21,6 +34,12 @@ server:
   host_redis: ${HOST_REDIS:localhost}
   port_redis: ${PORT_REDIS:6379}
 
+logging:
+  level:
+    org:
+      springframework:
+        security: info
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -29,5 +48,17 @@ springdoc:
 
 jwt:
   expiration: 86400 # 1 day in seconds
-  secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+  secret-key: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+  verify-email:
+    expiration: 604800 # 7 days in seconds
+    secret-key: pHuID1+T84ITaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
   x-internal-token: k118wSpPDIVURys
+
+frontend:
+  url: http://localhost:3000
+
+open-api:
+  url-gateway-localhost: http://localhost:8888/api/v1${server.servlet.context-path}
+  url-gateway-radmin: http://26.162.34.110:8888/api/v1${server.servlet.context-path}
+  url-localhost: http://localhost:${server.port}${server.servlet.context-path}
+  url-radmin: http://26.162.34.110:${server.port}${server.servlet.context-path}

@@ -1,15 +1,14 @@
 package com.odms.delivery.controller;
 
-import com.odms.delivery.annotation.InternalApi;
 import com.odms.delivery.dto.request.UpdateDeliveryStatusRequest;
-import com.odms.delivery.dto.response.Response;
 import com.odms.delivery.dto.response.UpdateDeliveryStatusResponse;
 import com.odms.delivery.dto.response.internal.DeliveryInfo;
 import com.odms.delivery.service.IDeliveryOrderService;
-import com.odms.delivery.utils.Message;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import nmquan.commonlib.annotation.InternalRequest;
+import nmquan.commonlib.dto.response.Response;
+import nmquan.commonlib.utils.ResponseUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,22 +23,13 @@ public class DeliveryOrderController {
     // Authorization is handled by the service layer
     public ResponseEntity<Response<UpdateDeliveryStatusResponse>> updateDeliveryOrderStatus(@RequestBody @Valid UpdateDeliveryStatusRequest request) {
         UpdateDeliveryStatusResponse response = deliveryOrderService.updateDeliveryOrderStatus(request);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                Response.<UpdateDeliveryStatusResponse>builder()
-                        .data(response)
-                        .message(Message.UPDATE_DELIVERY_ORDER_STATUS_SUCCESS.getMessage())
-                        .build()
-        );
+        return ResponseUtils.success(response);
     }
 
     @GetMapping("/internal/status-history/{orderCode}")
-    @InternalApi
+    @InternalRequest
     public ResponseEntity<Response<DeliveryInfo>> getDeliveryOrderStatusHistory(@PathVariable String orderCode) {
         DeliveryInfo response = deliveryOrderService.getDeliveryOrderStatusHistory(orderCode);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                Response.<DeliveryInfo>builder()
-                        .data(response)
-                        .build()
-        );
+        return ResponseUtils.success(response);
     }
 }

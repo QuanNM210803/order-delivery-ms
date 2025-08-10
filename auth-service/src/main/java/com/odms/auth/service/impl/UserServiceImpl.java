@@ -2,7 +2,6 @@ package com.odms.auth.service.impl;
 
 import com.odms.auth.dto.UserDto;
 import com.odms.auth.dto.request.FilterUserRequest;
-import com.odms.auth.dto.response.RoleResponse;
 import com.odms.auth.dto.response.UserResponse;
 import com.odms.auth.entity.Role;
 import com.odms.auth.entity.User;
@@ -44,10 +43,7 @@ public class UserServiceImpl implements IUserService {
                 .phone(user.getPhone())
                 .address(user.getAddress())
                 .roles(roles.stream()
-                        .map(role -> RoleResponse.builder()
-                                .id(role.getId())
-                                .name(role.getName())
-                                .build())
+                        .map(Role::getName)
                         .collect(Collectors.toList()))
                 .createdAt(
                         DateUtils.instantToString_HCM(user.getCreatedAt(), CommonConstants.DATE_TIME.DD_MM_YYYY_HH_MM_SS)
@@ -77,12 +73,6 @@ public class UserServiceImpl implements IUserService {
                             LinkedHashMap::new,
                             Collectors.collectingAndThen(Collectors.toList(), list -> {
                                 UserDto userDto = list.get(0);
-                                List<RoleResponse> roles = list.stream()
-                                        .map(l -> RoleResponse.builder()
-                                                .id(l.getRoleId())
-                                                .name(l.getRoleName())
-                                                .build())
-                                        .collect(Collectors.toList());
                                 return UserResponse.builder()
                                         .userId(userDto.getId())
                                         .username(userDto.getUsername())
@@ -91,7 +81,10 @@ public class UserServiceImpl implements IUserService {
                                         .phone(userDto.getPhone())
                                         .address(userDto.getAddress())
                                         .isActive(userDto.getIsActive())
-                                        .roles(roles)
+                                        .roles(list.stream()
+                                                .map(UserDto::getRoleName)
+                                                .toList()
+                                        )
                                         .createdAt(DateUtils.instantToString_HCM(
                                                 userDto.getCreatedAt(),
                                                 CommonConstants.DATE_TIME.DD_MM_YYYY_HH_MM_SS

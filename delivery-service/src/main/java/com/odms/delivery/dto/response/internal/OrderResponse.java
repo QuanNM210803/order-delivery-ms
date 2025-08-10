@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderResponse {
-    private Integer orderId;
+    private Long orderId;
     private String orderCode;
-    private Integer customerId;
+    private Long customerId;
     private String receiverName;
     private String receiverPhone;
     private String pickupAddress;

@@ -1,6 +1,6 @@
 package com.odms.auth.dto.event;
 
-import com.odms.auth.dto.TypeMail;
+import com.odms.auth.enums.TypeMail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

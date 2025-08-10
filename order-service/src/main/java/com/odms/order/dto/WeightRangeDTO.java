@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeightRangeDTO {
-    private Integer id;
+    private Long id;
     private Double fromGam;
     private Double toGam;
     private String label;

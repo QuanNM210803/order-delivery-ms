@@ -10,5 +10,5 @@ public interface ISocketSessionService {
 
     void deleteSocketSession(String socketSessionId);
 
-    Map<String, SocketSession> getSocketSessionByUserId(Integer userId);
+    Map<String, SocketSession> getSocketSessionByUserId(Long userId);
 }

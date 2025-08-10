@@ -35,7 +35,7 @@ public class Order {
     private List<StatusHistory> statusHistory;
 
     // for tracking data from service other
-    private Integer customerId;
-    private Integer deliveryStaffId;
+    private Long customerId;
+    private Long deliveryStaffId;
 
 }

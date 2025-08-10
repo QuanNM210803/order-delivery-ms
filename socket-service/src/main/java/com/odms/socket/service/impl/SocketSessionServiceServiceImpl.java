@@ -26,7 +26,7 @@ public class SocketSessionServiceServiceImpl implements ISocketSessionService {
     }
 
     @Override
-    public Map<String, SocketSession> getSocketSessionByUserId(Integer userId) {
+    public Map<String, SocketSession> getSocketSessionByUserId(Long userId) {
         return socketSessionRepository.findAllByUserId(userId)
                 .stream()
                 .collect(Collectors.toMap(SocketSession::getSocketSessionId, Function.identity()));

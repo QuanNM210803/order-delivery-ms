@@ -32,6 +32,6 @@ public class OrderCreateEventTracking {
 
     private List<StatusHistory> statusHistory;
 
-    private Integer customerId;
+    private Long customerId;
 
 }

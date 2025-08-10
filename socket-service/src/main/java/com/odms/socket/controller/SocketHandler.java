@@ -10,10 +10,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nmquan.commonlib.model.JwtUser;
+import nmquan.commonlib.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import quannm.jwtauthlib.entity.JwtUser;
-import quannm.jwtauthlib.jwt.JwtValidator;
 
 import java.time.Instant;
 
@@ -25,17 +25,17 @@ public class SocketHandler {
 
     private final ISocketSessionService socketSessionService;
 
-    @Value("${jwt.secretKey}")
-    private String secretKey;
+    @Value("${jwt.secret-key}")
+    private String SECRET_KEY;
 
     @OnConnect
     public void onConnect(SocketIOClient client) {
         try{
             String token = client.getHandshakeData().getSingleUrlParam("token");
-            JwtUser jwtUser = JwtValidator.validate(token, secretKey);
+            JwtUser jwtUser = JwtUtils.validate(token, SECRET_KEY);
             SocketSession socketSession = SocketSession.builder()
                     .socketSessionId(client.getSessionId().toString())
-                    .userId(jwtUser.getUserId())
+                    .userId(Long.valueOf(jwtUser.getUser().get("id").toString()))
                     .createdAt(Instant.now())
                     .build();
             socketSessionService.createSocketSession(socketSession);

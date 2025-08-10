@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DeliveryStaffRepository extends JpaRepository<DeliveryStaff, Integer> {
+public interface DeliveryStaffRepository extends JpaRepository<DeliveryStaff, Long> {
 
     @Query("SELECT ds FROM DeliveryStaff ds WHERE ds.user.id = :userId AND ds.isDeleted = :isDeleted")
     Optional<DeliveryStaff> findByUserId(Long userId, boolean isDeleted);

@@ -14,5 +14,5 @@ public class UpdateDeliveryStatusEvent {
     private StatusHistory statusHistory;
 
     // for status ASSIGNED
-    private Integer deliveryStaffId;
+    private Long deliveryStaffId;
 }

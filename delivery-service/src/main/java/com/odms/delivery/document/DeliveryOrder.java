@@ -18,6 +18,6 @@ public class DeliveryOrder {
     @Id
     private String id;
     private String orderCode;
-    private Integer deliveryStaffId;
+    private Long deliveryStaffId;
     private List<StatusHistory> statusHistory;
 }

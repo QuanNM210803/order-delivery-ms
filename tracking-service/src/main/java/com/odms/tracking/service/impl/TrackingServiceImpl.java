@@ -1,35 +1,31 @@
 package com.odms.tracking.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odms.tracking.dto.event.Order;
 import com.odms.tracking.dto.event.StatusHistory;
 import com.odms.tracking.dto.event.UpdateDeliveryStatusEvent;
 import com.odms.tracking.dto.request.internal.IdListRequest;
 import com.odms.tracking.dto.response.OrderResponse;
-import com.odms.tracking.dto.response.Response;
 import com.odms.tracking.dto.response.StatusHistoryResponse;
 import com.odms.tracking.dto.response.internal.DeliveryInfo;
 import com.odms.tracking.dto.response.internal.UserResponse;
-import com.odms.tracking.exception.AppException;
-import com.odms.tracking.exception.ErrorCode;
 import com.odms.tracking.service.ITrackingService;
-import com.odms.tracking.utils.WebUtils;
-import lombok.SneakyThrows;
+import nmquan.commonlib.constant.CommonConstants;
+import nmquan.commonlib.dto.response.Response;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.exception.CommonErrorCode;
+import nmquan.commonlib.service.RestTemplateService;
+import nmquan.commonlib.utils.DateUtils;
+import nmquan.commonlib.utils.ObjectMapperUtils;
+import nmquan.commonlib.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,10 +34,6 @@ import java.util.Objects;
 public class TrackingServiceImpl implements ITrackingService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
-    @Qualifier("internal")
-    private RestTemplate restTemplate;
 
     @Value("${server.host_delivery_service}")
     private String HOST_DELIVERY_SERVICE;
@@ -61,6 +53,9 @@ public class TrackingServiceImpl implements ITrackingService {
     @Value("${server.port_auth_service}")
     private String AUTH_SERVICE_PORT;
 
+    @Autowired
+    private RestTemplateService restTemplateService;
+
     @Override
     public OrderResponse getOrderDetails(String orderCode, String phone) {
         String key = "order:" + orderCode;
@@ -68,17 +63,14 @@ public class TrackingServiceImpl implements ITrackingService {
         Order order = new Order();
         Object raw = redisTemplate.opsForValue().get(key);
         if (raw != null) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-
-            order = objectMapper.convertValue(raw, Order.class);
+            order = ObjectMapperUtils.convertToObject(raw, Order.class);
         } else {
             DeliveryInfo deliveryInfo = this.getStatusHistory(orderCode);
             order = this.getOrderInfo(orderCode);
 
             // missing senderName and senderPhone
-            Integer customerId = order.getCustomerId();
-            Map<Integer, UserResponse> userInfo = this.getUserInfo(List.of(customerId));
+            Long customerId = order.getCustomerId();
+            Map<Long, UserResponse> userInfo = this.getUserInfo(List.of(customerId));
 
             order.setSenderName(userInfo.get(customerId).getFullName());
             order.setSenderPhone(userInfo.get(customerId).getPhone());
@@ -90,20 +82,20 @@ public class TrackingServiceImpl implements ITrackingService {
         // for API public: require phone to access
         if (phone != null && !phone.isEmpty()) {
             if (!order.getReceiverPhone().equals(phone) && !order.getSenderPhone().equals(phone)) {
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
             return this.mapToOrderResponse(order);
         }
 
-        List<String> roles = WebUtils.getRoles();
-        Integer userId = WebUtils.getCurrentUserId();
+        List<String> roles = WebUtils.getCurrentRole();
+        Long userId = WebUtils.getCurrentUserId();
         if (roles.contains("CUSTOMER")) {
             if(!Objects.equals(userId, order.getCustomerId())){
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
         } else if(roles.contains("DELIVERY_STAFF")) {
             if(!Objects.equals(userId, order.getDeliveryStaffId())){
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
         }
         return this.mapToOrderResponse(order);
@@ -112,23 +104,20 @@ public class TrackingServiceImpl implements ITrackingService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void processOrderCreation(String message) {
-        Order order = this.toObject(message, Order.class);
+        Order order = ObjectMapperUtils.convertToObject(message, Order.class);
         this.saveOrder(order);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void processOrderUpdate(String message) {
-        UpdateDeliveryStatusEvent updateDeliveryStatusEvent = this.toObject(message, UpdateDeliveryStatusEvent.class);
+        UpdateDeliveryStatusEvent updateDeliveryStatusEvent = ObjectMapperUtils.convertToObject(message, UpdateDeliveryStatusEvent.class);
         String orderCode = updateDeliveryStatusEvent.getOrderCode();
 
         String key = "order:" + orderCode;
         Object raw = redisTemplate.opsForValue().get(key);
         if (raw != null) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            Order order = objectMapper.convertValue(raw, Order.class);
-
+            Order order = ObjectMapperUtils.convertToObject(raw, Order.class);
             order.getStatusHistory().add(updateDeliveryStatusEvent.getStatusHistory());
             if(updateDeliveryStatusEvent.getDeliveryStaffId() != null){
                 order.setDeliveryStaffId(updateDeliveryStatusEvent.getDeliveryStaffId());
@@ -143,87 +132,50 @@ public class TrackingServiceImpl implements ITrackingService {
         redisTemplate.opsForValue().set(key, order, ttl);
     }
 
-    @SneakyThrows
-    private <T> T toObject(String message, Class<T> type) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper.readValue(message, type);
-    }
-
     // call delivery service
     private DeliveryInfo getStatusHistory(String orderCode) {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-            ParameterizedTypeReference<Response<DeliveryInfo>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<DeliveryInfo>> response = restTemplate.exchange(
-                    "http://" + HOST_DELIVERY_SERVICE + ":" + PORT_DELIVERY_SERVICE + "/delivery/delivery-order/internal/status-history/{orderCode}",
-                    HttpMethod.GET,
-                    entity,
-                    typeRef,
-                    orderCode
-            );
-            return Objects.requireNonNull(response.getBody()).getData();
-        } catch (Exception exception) {
-            this.throwException(exception.getMessage());
-            return null;
-        }
+        String url = "http://" + HOST_DELIVERY_SERVICE + ":" + PORT_DELIVERY_SERVICE + "/delivery/delivery-order/internal/status-history/{orderCode}";
+        Response<DeliveryInfo> response = restTemplateService.getMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<DeliveryInfo>>() {},
+                orderCode
+        );
+        return response != null ? response.getData() : null;
     }
 
     // call order-service
     private Order getOrderInfo(String orderCode) {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-            ParameterizedTypeReference<Response<Order>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<Order>> response = restTemplate.exchange(
-                    "http://" + HOST_ORDER_SERVICE + ":" + PORT_ORDER_SERVICE + "/order/order/internal/order/{orderCode}",
-                    HttpMethod.GET,
-                    entity,
-                    typeRef,
-                    orderCode
-            );
-            return Objects.requireNonNull(response.getBody()).getData();
-        } catch (Exception exception) {
-            this.throwException(exception.getMessage());
-            return null;
-        }
+        String url = "http://" + HOST_ORDER_SERVICE + ":" + PORT_ORDER_SERVICE + "/order/order/internal/order/{orderCode}";
+        Response<Order> response = restTemplateService.getMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<Order>>() {},
+                orderCode
+        );
+        return response != null ? response.getData() : null;
     }
 
     // call auth-service
-    private Map<Integer, UserResponse> getUserInfo(List<Integer> ids){
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<IdListRequest> entity = new HttpEntity<>(IdListRequest.builder()
+    private Map<Long, UserResponse> getUserInfo(List<Long> ids){
+        String url = "http://" + AUTH_SERVICE_HOST + ":" + AUTH_SERVICE_PORT + "/auth/user/internal/info/users";
+        Response<Map<Long, UserResponse>> response = restTemplateService.postMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<Map<Long, UserResponse>>>() {},
+                IdListRequest.builder()
                     .ids(ids)
-                    .build(), headers);
-            ParameterizedTypeReference<Response<Map<Integer, UserResponse>>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<Map<Integer, UserResponse>>> response = restTemplate.exchange(
-                    "http://" + AUTH_SERVICE_HOST + ":" + AUTH_SERVICE_PORT + "/auth/user/internal/info/users",
-                    HttpMethod.POST,
-                    entity,
-                    typeRef
-            );
-            return Objects.requireNonNull(response.getBody()).getData();
-        } catch (Exception exception) {
-            this.throwException(exception.getMessage());
-            return null;
-        }
+                    .build()
+        );
+        return response != null ? response.getData() : null;
     }
 
     private OrderResponse mapToOrderResponse(Order order) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         List<StatusHistory> statusHistory = order.getStatusHistory();
         List<StatusHistoryResponse> statusHistoryResponses = statusHistory.stream()
                 .map(status -> StatusHistoryResponse.builder()
                         .status(status.getStatus())
                         .createdBy(status.getCreatedBy())
-                        .updatedAt(status.getUpdatedAt().format(formatter))
+                        .updatedAt(
+                                DateUtils.instantToString_HCM(status.getUpdatedAt(), CommonConstants.DATE_TIME.DD_MM_YYYY_HH_MM_SS_HYPHEN)
+                        )
                         .reasonCancel(status.getReasonCancel())
                         .noteCancel(status.getNoteCancel())
                         .build())
@@ -259,17 +211,5 @@ public class TrackingServiceImpl implements ITrackingService {
     private String formatCurrency(Double value) {
         DecimalFormat formatter = new DecimalFormat("#,###");
         return formatter.format(value) + " VND";
-    }
-
-    @SneakyThrows
-    private void throwException(String message) {
-        String pre = message.split(":", 2)[1].trim();
-        String formattedMessage = pre.substring(1, pre.length()-1).trim();
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-        Integer statusCode = Integer.valueOf(message.split(":", 2)[0].trim());
-        Response<Object> response = objectMapper.readValue(formattedMessage,  new TypeReference<Response<Object>>() {});
-        throw new AppException(response, statusCode);
     }
 }

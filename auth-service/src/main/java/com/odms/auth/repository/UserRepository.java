@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u " +
             "WHERE u.id = :userId AND u.isDeleted = :isDeleted")
@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByIdIn(List<Long> userIds, boolean isDeleted);
 
     @Query("SELECT ur.user.id AS id, ur.user.isActive AS isActive, ur.user.createdAt AS createdAt, ur.user.username AS username, " +
-            "ur.user.fullName AS fullname, ur.user.email AS email, ur.user.address AS address, ur.role.id AS roleId, ur.role.name AS roleName " +
+            "ur.user.fullName AS fullName, ur.user.email AS email, ur.user.phone AS phone, ur.user.address AS address, ur.role.id AS roleId, ur.role.name AS roleName " +
             "FROM UserRole ur " +
             "WHERE ur.isDeleted = false AND ur.user.isDeleted = false AND ur.role.isDeleted = false " +
             "AND (:#{#request.username} IS NULL OR LOWER(ur.user.username) LIKE LOWER(CONCAT('%', :#{#request.username}, '%'))) " +

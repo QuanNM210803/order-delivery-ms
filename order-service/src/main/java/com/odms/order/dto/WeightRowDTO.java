@@ -15,5 +15,5 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeightRowDTO {
     private WeightRangeDTO weightRange;
-    private Map<Integer, String> prices; // Key: distanceRangeId, Value: price
+    private Map<Long, String> prices; // Key: distanceRangeId, Value: price
 }

@@ -1,6 +1,7 @@
 package com.odms.auth.dto.request;
 
-import com.odms.auth.dto.RoleName;
+import com.odms.auth.constant.Message;
+import com.odms.auth.enums.RoleName;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -16,23 +17,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    @NotBlank(message = "Tên đăng nhập là bắt buộc")
-    @Size(min = 5, max = 20, message = "Tên đăng nhập phải từ 5 đến 20 ký tự")
+    @NotBlank(message = Message.REGISTER_USERNAME_REQUIRE)
+    @Size(min = 5, max = 20, message = Message.REGISTER_USERNAME_INVALID)
     private String username;
 
-    @NotBlank(message = "Mật khẩu là bắt buộc")
-    @Size(min = 6, max = 20, message = "Mật khẩu phải từ 6 đến 20 ký tự")
+    @NotBlank(message = Message.REGISTER_PASSWORD_REQUIRE)
+    @Size(min = 6, max = 20, message = Message.REGISTER_PASSWORD_INVALID)
     private String password;
 
-    @NotBlank(message = "Tên đầy đủ là bắt buộc")
+    @NotBlank(message = Message.REGISTER_FULL_NAME_REQUIRE)
     private String fullName;
 
-    @NotBlank(message = "Số điện thoại là bắt buộc")
-    @Pattern(regexp = "^\\d{10}$", message = "Số điện thoại phải gồm 10 chữ số")
+    @NotBlank(message = Message.REGISTER_PHONE_REQUIRE)
+    @Pattern(regexp = "^\\d{10}$", message = Message.REGISTER_PHONE_INVALID)
     private String phone;
 
-    @NotBlank(message = "Email là bắt buộc")
-    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = Message.REGISTER_EMAIL_REQUIRE)
+    @Email(message = Message.REGISTER_EMAIL_INVALID)
     private String email;
 
     private String address;

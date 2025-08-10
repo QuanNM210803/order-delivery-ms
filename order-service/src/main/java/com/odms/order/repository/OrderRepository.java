@@ -2,7 +2,7 @@ package com.odms.order.repository;
 
 import com.odms.order.dto.StatisticsDeliveryProjection;
 import com.odms.order.entity.Order;
-import com.odms.order.entity.enumerate.OrderStatus;
+import com.odms.order.enums.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,10 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
-    Optional<Order> findByOrderCode(String orderCode);
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    @Query("SELECT o FROM Order o WHERE o.isDeleted = :isDeleted AND o.orderCode = :orderCode")
+    Optional<Order> findByOrderCode(String orderCode, boolean isDeleted);
 
     @Query("SELECT o FROM Order o WHERE " +
+            "o.isDeleted = :isDeleted AND " +
             "(:customerId IS NULL OR o.customerId = :customerId) AND " +
             "(:orderCode IS NULL OR o.orderCode LIKE %:orderCode%) AND " +
             "(:receiverName IS NULL OR LOWER(o.receiverName) LIKE %:receiverName%) AND " +
@@ -27,17 +29,19 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "(o.createdAt >= COALESCE(:startDate, o.createdAt)) AND " +
             "(o.createdAt <= COALESCE(:endDate, o.createdAt))")
     Page<Order> filterByCustomer(
-            Integer customerId,
+            Long customerId,
             String orderCode,
             String receiverName,
             String receiverPhone,
             List<OrderStatus> orderStatuses,
             LocalDateTime startDate,
             LocalDateTime endDate,
+            boolean isDeleted,
             Pageable pageable
     );
 
     @Query("SELECT o FROM Order o WHERE " +
+            "o.isDeleted = :isDeleted AND " +
             "(:deliveryStaffId IS NULL OR o.deliveryStaffId = :deliveryStaffId) AND " +
             "(:orderCode IS NULL OR o.orderCode LIKE %:orderCode%) AND " +
             "(:senderName IS NULL OR LOWER(o.senderName) LIKE %:senderName%) AND " +
@@ -46,17 +50,19 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "(o.createdAt >= COALESCE(:startDate, o.createdAt)) AND " +
             "(o.createdAt <= COALESCE(:endDate, o.createdAt))")
     Page<Order> filterByDelivery(
-            Integer deliveryStaffId,
+            Long deliveryStaffId,
             String orderCode,
             String senderName,
             String description,
-            List<OrderStatus> orderStatuses,
+            List<String> orderStatuses,
             LocalDateTime startDate,
             LocalDateTime endDate,
+            boolean isDeleted,
             Pageable pageable
     );
 
     @Query("SELECT o FROM Order o WHERE " +
+            "o.isDeleted = :isDeleted AND " +
             "(:orderCode IS NULL OR o.orderCode LIKE %:orderCode%) AND " +
             "(:senderName IS NULL OR LOWER(o.senderName) LIKE %:senderName%) AND " +
             "(:description IS NULL OR LOWER(o.description) LIKE %:description%) AND " +
@@ -70,6 +76,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             List<OrderStatus> orderStatuses,
             LocalDateTime startDate,
             LocalDateTime endDate,
+            boolean isDeleted,
             Pageable pageable
     );
 
@@ -96,7 +103,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
         WHERE staff_stats.delivery_staff_id = :deliveryStaffId
         """, nativeQuery = true)
     Optional<StatisticsDeliveryProjection> getStatisticsForDeliveryStaff(
-            @Param("deliveryStaffId") Integer deliveryStaffId,
+            @Param("deliveryStaffId") Long deliveryStaffId,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );

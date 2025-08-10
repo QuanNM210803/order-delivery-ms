@@ -1,51 +1,44 @@
 package com.odms.delivery.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.odms.delivery.document.DeliveryOrder;
 import com.odms.delivery.document.StatusHistory;
-import com.odms.delivery.document.enumerate.OrderStatus;
-import com.odms.delivery.document.enumerate.ReasonCancel;
-import com.odms.delivery.dto.TypeMail;
+import com.odms.delivery.enums.OrderStatus;
+import com.odms.delivery.enums.ReasonCancel;
+import com.odms.delivery.enums.TypeMail;
 import com.odms.delivery.dto.event.NotificationEvent;
 import com.odms.delivery.dto.event.OrderCreateEvent;
 import com.odms.delivery.dto.event.UpdateDeliveryStatusEvent;
 import com.odms.delivery.dto.event.UpdateDeliveryStatusToOrderEvent;
 import com.odms.delivery.dto.request.UpdateDeliveryStatusRequest;
 import com.odms.delivery.dto.request.internal.IdListRequest;
-import com.odms.delivery.dto.response.IDResponse;
-import com.odms.delivery.dto.response.Response;
 import com.odms.delivery.dto.response.UpdateDeliveryStatusResponse;
 import com.odms.delivery.dto.response.internal.DeliveryInfo;
 import com.odms.delivery.dto.response.internal.OrderResponse;
 import com.odms.delivery.dto.response.internal.UserResponse;
-import com.odms.delivery.exception.AppException;
-import com.odms.delivery.exception.ErrorCode;
+import com.odms.delivery.enums.DeliveryErrorCode;
 import com.odms.delivery.repository.DeliveryOrderRepository;
 import com.odms.delivery.service.IDeliveryOrderService;
-import com.odms.delivery.utils.WebUtils;
 import lombok.SneakyThrows;
+import nmquan.commonlib.dto.response.IDResponse;
+import nmquan.commonlib.dto.response.Response;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.exception.CommonErrorCode;
+import nmquan.commonlib.service.RestTemplateService;
+import nmquan.commonlib.utils.ObjectMapperUtils;
+import nmquan.commonlib.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 
 @Service
 public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
     @Autowired
     private DeliveryOrderRepository deliveryOrderRepository;
-
-    @Autowired
-    @Qualifier("internal")
-    private RestTemplate restTemplate;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -64,6 +57,9 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
 
     @Value("${frontend.url}")
     private String FRONTEND_URL;
+
+    @Autowired
+    private RestTemplateService restTemplateService;
 
     @Override
     public void processOrderCreation(OrderCreateEvent orderCreateEvent) {
@@ -85,42 +81,40 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
     @Override
     @SneakyThrows
     public UpdateDeliveryStatusResponse updateDeliveryOrderStatus(UpdateDeliveryStatusRequest request) {
-        List<String> roles = WebUtils.getRoles();
+        List<String> roles = WebUtils.getCurrentRole();
         if(!roles.contains("CUSTOMER") && !roles.contains("ADMIN") && !roles.contains("DELIVERY_STAFF")) {
-            throw new AppException(ErrorCode.ACCESS_DENIED);
+            throw new AppException(CommonErrorCode.ACCESS_DENIED);
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
         if (roles.contains("CUSTOMER")) {
             if(request.getStatus() != OrderStatus.CANCELLED){
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
-            Integer userId = WebUtils.getCurrentUserId();
+            Long userId = WebUtils.getCurrentUserId();
             String orderCode = request.getOrderCode();
 
             // check if the customerId matches the orderCode
             Boolean isMatch = this.checkCustomerIdMatchOrderCode(userId, orderCode);
             if(Boolean.FALSE.equals(isMatch)) {
-                throw new AppException(ErrorCode.ORDER_NOT_FOUND);
+                throw new AppException(DeliveryErrorCode.ORDER_NOT_FOUND);
             }
 
             DeliveryOrder deliveryOrder = deliveryOrderRepository.findByOrderCode(orderCode)
-                    .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                    .orElseThrow(() -> new AppException(DeliveryErrorCode.ORDER_NOT_FOUND));
             OrderStatus currentStatus = getOrderStatusCurrent(deliveryOrder.getStatusHistory());
 
             if(Objects.equals(currentStatus.getOrder(), OrderStatus.CANCELLED.getOrder())){
-                throw new AppException(ErrorCode.ORDER_ALREADY_CANCELLED);
+                throw new AppException(DeliveryErrorCode.ORDER_ALREADY_CANCELLED);
             }
             if(currentStatus.getOrder() >= OrderStatus.ASSIGNED.getOrder()){
-                throw new AppException(ErrorCode.ORDER_ALREADY_ASSIGNED);
+                throw new AppException(DeliveryErrorCode.ORDER_ALREADY_ASSIGNED);
             }
 
             deliveryOrder.getStatusHistory().add(
                     StatusHistory.builder()
                             .status(request.getStatus())
                             .createdBy(userId)
-                            .updatedAt(LocalDateTime.now())
+                            .updatedAt(Instant.now())
                             .reasonCancel(ReasonCancel.CUSTOMER_CANCEL_BEFORE_ASSIGN)
                             .build()
             );
@@ -137,38 +131,38 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
 
         if(roles.contains("ADMIN")) {
             if(request.getStatus() != OrderStatus.ASSIGNED){
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
 
             DeliveryOrder deliveryOrder = deliveryOrderRepository.findByOrderCode(request.getOrderCode())
-                    .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                    .orElseThrow(() -> new AppException(DeliveryErrorCode.ORDER_NOT_FOUND));
 
             OrderStatus currentStatus = this.getOrderStatusCurrent(deliveryOrder.getStatusHistory());
 
             if(currentStatus.getOrder() >= OrderStatus.ASSIGNED.getOrder()){
-                throw new AppException(ErrorCode.ORDER_ALREADY_ASSIGNED);
+                throw new AppException(DeliveryErrorCode.ORDER_ALREADY_ASSIGNED);
             }
 
             // get customerId
             OrderResponse orderInfo = this.getOrderInfo(request.getOrderCode());
-            Integer customerId = Objects.requireNonNull(orderInfo).getCustomerId();
-            Integer deliveryStaffId = request.getDeliveryStaffId();
+            Long customerId = Objects.requireNonNull(orderInfo).getCustomerId();
+            Long deliveryStaffId = request.getDeliveryStaffId();
 
             // get email of customer and delivery staff
-            Map<Integer, UserResponse> data = this.getUserInfo(List.of(customerId, deliveryStaffId));
+            Map<Long, UserResponse> data = this.getUserInfo(List.of(customerId, deliveryStaffId));
             String emailCustomer = data.get(customerId).getEmail();
             String emailDeliveryStaff = data.get(deliveryStaffId).getEmail();
             String fullNameDeliveryStaff = data.get(deliveryStaffId).getFullName();
 
             // Call to update delivery staff status finding order
-            Integer dsId = this.updateFindOrderStatus(deliveryStaffId);
+            Long dsId = this.updateFindOrderStatus(deliveryStaffId);
 
             // save delivery order status
             deliveryOrder.getStatusHistory().add(
                     StatusHistory.builder()
                             .status(request.getStatus())
                             .createdBy(WebUtils.getCurrentUserId())
-                            .updatedAt(LocalDateTime.now())
+                            .updatedAt(Instant.now())
                             .build()
             );
             deliveryOrder.setDeliveryStaffId(request.getDeliveryStaffId());
@@ -186,7 +180,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                             "\nNhân viên giao hàng: " + fullNameDeliveryStaff +
                             "\nClick để xem chi tiết: " + FRONTEND_URL + "/customer/order/detail/" + request.getOrderCode())
                     .build();
-            String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventCustomer);
+            String notificationJsonCustomer = ObjectMapperUtils.convertToJson(notificationEventCustomer);
             kafkaTemplate.send("notification-topic", notificationJsonCustomer);
 
             // send email to delivery staff
@@ -201,14 +195,14 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                             "\nSố điện thoại người nhận: " + orderInfo.getReceiverPhone() +
                             "\nClick để xem chi tiết: " + FRONTEND_URL + "/delivery/order/detail/" + request.getOrderCode())
                     .build();
-            String notificationJsonDS = objectMapper.writeValueAsString(notificationEventDS);
+            String notificationJsonDS = ObjectMapperUtils.convertToJson(notificationEventDS);
             kafkaTemplate.send("notification-topic", notificationJsonDS);
 
             // send socket
             Map<String, Object> dataUpdate = new HashMap<>();
             dataUpdate.put("status", false);
             dataUpdate.put("userId", dsId);
-            String dataUpdateJson = objectMapper.writeValueAsString(dataUpdate);
+            String dataUpdateJson = ObjectMapperUtils.convertToJson(dataUpdate);
             kafkaTemplate.send("update-find-order-status-topic", dataUpdateJson);
 
             // send to tracking service
@@ -222,31 +216,31 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
 
         if(roles.contains("DELIVERY_STAFF")) {
             if(request.getStatus() == OrderStatus.CREATED || request.getStatus() == OrderStatus.ASSIGNED){
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
             if(request.getStatus() == OrderStatus.CANCELLED &&
                     (request.getReasonCancel() == null || request.getReasonCancel() == ReasonCancel.CUSTOMER_CANCEL_BEFORE_ASSIGN)) {
-                throw new AppException(ErrorCode.REASON_CANCEL_REQUIRED);
+                throw new AppException(DeliveryErrorCode.REASON_CANCEL_REQUIRED);
             }
 
-            Integer userId = WebUtils.getCurrentUserId();
+            Long userId = WebUtils.getCurrentUserId();
             DeliveryOrder deliveryOrder = deliveryOrderRepository.findByOrderCode(request.getOrderCode())
-                    .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                    .orElseThrow(() -> new AppException(DeliveryErrorCode.ORDER_NOT_FOUND));
             if(!Objects.equals(deliveryOrder.getDeliveryStaffId(), userId)) {
-                throw new AppException(ErrorCode.ACCESS_DENIED);
+                throw new AppException(CommonErrorCode.ACCESS_DENIED);
             }
 
             OrderStatus currentStatus = getOrderStatusCurrent(deliveryOrder.getStatusHistory());
             if(currentStatus.getOrder() >= request.getStatus().getOrder()) {
-                throw new AppException(ErrorCode.ORDER_STATUS_NOT_ALLOW);
+                throw new AppException(DeliveryErrorCode.ORDER_STATUS_NOT_ALLOW);
             }
 
             // get customerId
             OrderResponse orderInfo = this.getOrderInfo(request.getOrderCode());
-            Integer customerId = Objects.requireNonNull(orderInfo).getCustomerId();
+            Long customerId = Objects.requireNonNull(orderInfo).getCustomerId();
 
             // get email of customer and info delivery staff
-            Map<Integer, UserResponse> data = this.getUserInfo(List.of(customerId, userId));
+            Map<Long, UserResponse> data = this.getUserInfo(List.of(customerId, userId));
             String emailCustomer = data.get(customerId).getEmail();
             String phoneDeliveryStaff = data.get(userId).getPhone();
             String fullNameDeliveryStaff = data.get(userId).getFullName();
@@ -255,7 +249,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
             StatusHistory statusHistory = StatusHistory.builder()
                     .status(request.getStatus())
                     .createdBy(userId)
-                    .updatedAt(LocalDateTime.now())
+                    .updatedAt(Instant.now())
                     .build();
             if (request.getStatus() == OrderStatus.CANCELLED) {
                 statusHistory.setReasonCancel(request.getReasonCancel());
@@ -277,7 +271,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                                 "\nLý do hủy: " + request.getReasonCancel().getDescription() + (request.getNoteCancel()!=null ? " - " + request.getNoteCancel(): "") +
                                 "\nClick để xem chi tiết: " + FRONTEND_URL + "/customer/order/detail/" + request.getOrderCode())
                         .build();
-                String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventCancel);
+                String notificationJsonCustomer = ObjectMapperUtils.convertToJson(notificationEventCancel);
                 kafkaTemplate.send("notification-topic", notificationJsonCustomer);
 
             }
@@ -291,7 +285,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                                 "\nĐịa chỉ nhận hàng: " + orderInfo.getDeliveryAddress() +
                                 "\nClick để xem chi tiết: " + FRONTEND_URL + "/customer/order/detail/" + request.getOrderCode())
                         .build();
-                String notificationJsonCustomer = objectMapper.writeValueAsString(notificationEventComplete);
+                String notificationJsonCustomer = ObjectMapperUtils.convertToJson(notificationEventComplete);
                 kafkaTemplate.send("notification-topic", notificationJsonCustomer);
             }
 
@@ -312,18 +306,18 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
     @Override
     public DeliveryInfo getDeliveryOrderStatusHistory(String orderCode) {
         DeliveryOrder deliveryOrder = deliveryOrderRepository.findByOrderCode(orderCode)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(DeliveryErrorCode.ORDER_NOT_FOUND));
         List<StatusHistory> statusHistories = deliveryOrder
                 .getStatusHistory()
                 .stream()
                 .sorted(Comparator.comparing(StatusHistory::getUpdatedAt))
                 .toList();
 
-        List<Integer> userIds = statusHistories.stream()
+        List<Long> userIds = statusHistories.stream()
                 .map(StatusHistory::getCreatedBy)
                 .distinct()
                 .toList();
-        Map<Integer, UserResponse> userInfo = this.getUserInfo(userIds);
+        Map<Long, UserResponse> userInfo = this.getUserInfo(userIds);
 
         List<com.odms.delivery.dto.event.StatusHistory> status = statusHistories.stream()
                 .map(statusHistory -> com.odms.delivery.dto.event.StatusHistory.builder()
@@ -334,7 +328,7 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                         .noteCancel(statusHistory.getNoteCancel())
                         .build())
                 .toList();
-        Integer deliveryStaffId = deliveryOrder.getDeliveryStaffId();
+        Long deliveryStaffId = deliveryOrder.getDeliveryStaffId();
 
         return DeliveryInfo.builder()
                 .deliveryStaffId(deliveryStaffId)
@@ -346,108 +340,56 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
         return statusHistories.stream()
                 .map(StatusHistory::getStatus)
                 .max(Comparator.comparingInt(OrderStatus::getOrder))
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(DeliveryErrorCode.ORDER_NOT_FOUND));
     }
 
     // call order-service
     private OrderResponse getOrderInfo(String orderCode) {
-        try{
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-            ParameterizedTypeReference<Response<OrderResponse>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<OrderResponse>> response= restTemplate.exchange(
-                    "http://" + ORDER_SERVICE_HOST + ":" + ORDER_SERVICE_PORT +
-                            "/order/order/internal/order/{orderCode}",
-                    HttpMethod.GET,
-                    entity,
-                    typeRef,
-                    orderCode
-            );
-            return Objects.requireNonNull(response.getBody()).getData();
-        } catch (Exception exception) {
-            this.throwException(exception.getMessage());
-            return null;
-        }
+        String url = "http://" + ORDER_SERVICE_HOST + ":" + ORDER_SERVICE_PORT +
+                "/order/order/internal/order/{orderCode}";
+        Response<OrderResponse> response = restTemplateService.getMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<OrderResponse>>() {},
+                orderCode
+        );
+        return response != null ? response.getData() : null;
     }
 
     // call auth-service
-    private Map<Integer, UserResponse> getUserInfo(List<Integer> ids){
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<IdListRequest> entity = new HttpEntity<>(IdListRequest.builder()
-                    .ids(ids)
-                    .build(), headers);
-            ParameterizedTypeReference<Response<Map<Integer, UserResponse>>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<Map<Integer, UserResponse>>> response = restTemplate.exchange(
-                    "http://" + AUTH_SERVICE_HOST + ":" + AUTH_SERVICE_PORT + "/auth/user/internal/info/users",
-                    HttpMethod.POST,
-                    entity,
-                    typeRef
-            );
-            return Objects.requireNonNull(response.getBody()).getData();
-        } catch (Exception exception) {
-            this.throwException(exception.getMessage());
-            return null;
-        }
+    private Map<Long, UserResponse> getUserInfo(List<Long> ids){
+        String url = "http://" + AUTH_SERVICE_HOST + ":" + AUTH_SERVICE_PORT + "/auth/user/internal/info/users";
+        Response<Map<Long, UserResponse>> response = restTemplateService.postMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<Map<Long, UserResponse>>>() {},
+                IdListRequest.builder()
+                        .ids(ids)
+                        .build()
+        );
+        return response != null ? response.getData() : null;
     }
 
     // call auth-service to update delivery staff status finding order
-    private Integer updateFindOrderStatus(Integer deliveryStaffId) {
-        try{
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-            ParameterizedTypeReference<Response<IDResponse<Integer>>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<IDResponse<Integer>>> response = restTemplate.exchange(
-                    "http://" + AUTH_SERVICE_HOST + ":" + AUTH_SERVICE_PORT +
-                            "/auth/delivery-staff/internal/update/status-finding-order/{userId}",
-                    HttpMethod.GET,
-                    entity,
-                    typeRef,
-                    deliveryStaffId
-            );
-            return Objects.requireNonNull(response.getBody()).getData().getId();
-        } catch (Exception exception) {
-            this.throwException(exception.getMessage());
-            return null;
-        }
+    private Long updateFindOrderStatus(Long deliveryStaffId) {
+        String url ="http://" + AUTH_SERVICE_HOST + ":" + AUTH_SERVICE_PORT +
+                           "/auth/delivery-staff/internal/update/status-finding-order/{userId}";
+        Response<IDResponse<Long>> response = restTemplateService.getMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<IDResponse<Long>>>() {},
+                deliveryStaffId
+        );
+        return response != null ? response.getData().getId() : null;
     }
 
     // call order-service to check if customerId matches orderCode
-    private Boolean checkCustomerIdMatchOrderCode(Integer customerId, String orderCode) {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-            ParameterizedTypeReference<Response<Boolean>> typeRef =
-                    new ParameterizedTypeReference<>() {};
-            ResponseEntity<Response<Boolean>> response = restTemplate.exchange(
-                    "http://" + ORDER_SERVICE_HOST + ":" + ORDER_SERVICE_PORT +
-                            "/order/order/internal/check-customer-id/{customerId}/{orderCode}",
-                    HttpMethod.GET,
-                    entity,
-                    typeRef,
-                    customerId, orderCode
-            );
-            return Objects.requireNonNull(response.getBody()).getData();
-        } catch (Exception exception){
-            this.throwException(exception.getMessage());
-            return null;
-        }
-    }
-
-    @SneakyThrows
-    private void throwException(String message) {
-        String pre = message.split(":", 2)[1].trim();
-        String formattedMessage = pre.substring(1, pre.length()-1).trim();
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-        Integer statusCode = Integer.valueOf(message.split(":", 2)[0].trim());
-        Response<Object> response = objectMapper.readValue(formattedMessage,  new TypeReference<Response<Object>>() {});
-        throw new AppException(response, statusCode);
+    private Boolean checkCustomerIdMatchOrderCode(Long customerId, String orderCode) {
+        String url = "http://" + ORDER_SERVICE_HOST + ":" + ORDER_SERVICE_PORT +
+                "/order/order/internal/check-customer-id/{customerId}/{orderCode}";
+        Response<Boolean> response = restTemplateService.getMethodRestTemplate(
+                url,
+                new ParameterizedTypeReference<Response<Boolean>>() {},
+                customerId, orderCode
+        );
+        return response != null ? response.getData() : null;
     }
 
     private void sendMessageUpdateToTracking(String orderCode,
@@ -455,33 +397,29 @@ public class DeliveryOrderServiceImpl implements IDeliveryOrderService {
                                              String fullName,
                                              ReasonCancel reasonCancel,
                                              String noteCancel,
-                                             Integer deliveryStaffId) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
+                                             Long deliveryStaffId) {
         UpdateDeliveryStatusEvent updateDeliveryStatusEvent = UpdateDeliveryStatusEvent.builder()
                 .orderCode(orderCode)
                 .deliveryStaffId(deliveryStaffId)
                 .statusHistory(com.odms.delivery.dto.event.StatusHistory.builder()
                         .status(status.getDescription())
                         .createdBy(fullName)
-                        .updatedAt(LocalDateTime.now())
+                        .updatedAt(Instant.now())
                         .reasonCancel(reasonCancel != null ? reasonCancel.getDescription() : null)
                         .noteCancel(noteCancel)
                         .build())
                 .build();
-        String updateDeliveryStatusEventJson = objectMapper.writeValueAsString(updateDeliveryStatusEvent);
+        String updateDeliveryStatusEventJson = ObjectMapperUtils.convertToJson(updateDeliveryStatusEvent);
         kafkaTemplate.send("update-delivery-status-tracking-topic", updateDeliveryStatusEventJson);
     }
 
-    private void sendMessageUpdateToOrderService(String orderCode, OrderStatus status, Integer deliveryStaffId) throws Exception {
+    private void sendMessageUpdateToOrderService(String orderCode, OrderStatus status, Long deliveryStaffId) {
         UpdateDeliveryStatusToOrderEvent updateStatusToOrderEvent = UpdateDeliveryStatusToOrderEvent.builder()
                 .orderCode(orderCode)
                 .status(status)
                 .deliveryStaffId(deliveryStaffId)
                 .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String updateStatusDelivery = objectMapper.writeValueAsString(updateStatusToOrderEvent);
+        String updateStatusDelivery = ObjectMapperUtils.convertToJson(updateStatusToOrderEvent);
         kafkaTemplate.send("update-delivery-status-order-topic", updateStatusDelivery);
     }
 }

@@ -1,6 +1,5 @@
 package com.odms.notification.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.odms.notification.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,7 +11,7 @@ public class EmailController {
     private final EmailService emailService;
 
     @KafkaListener(topics = "notification-topic", groupId = "notification-service")
-    public void listenNotification(String notificationJson) throws JsonProcessingException {
+    public void listenNotification(String notificationJson) {
         emailService.handleSendEmail(notificationJson);
     }
 }
